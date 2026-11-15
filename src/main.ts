@@ -106,13 +106,13 @@ const notes: Record<PlanetId, Note[]> = {
   mars: [
     {
       number: "01",
-      category: "Mars · Jezero Crater",
+      category: "Mars · Representative location",
       title: "A thin, dusty atmosphere",
       slides: [
         {
           heading: "Pressure at the surface",
           description:
-            "A supplied, previously compiled MEDA workbook reports a mean surface pressure of 720.71 Pa across 18,728 hourly rows from sols 1–900. This is a provisional summary, not a complete reprocessing of the public archive.",
+            "The point shown on the Mars selector is representative only; it does not mark one exact research site or a single location where all observations summarized here were collected. A supplied, previously compiled MEDA workbook reports a mean surface pressure of 720.71 Pa across 18,728 hourly rows from sols 1–900. This is a provisional summary, not a complete reprocessing of the public archive.",
           metric: "720.71 Pa · MEAN PRESSURE · SOLS 1–900",
           chart: {
             title: "MEDA surface pressure summary",
@@ -195,6 +195,7 @@ const notes: Record<PlanetId, Note[]> = {
 const planetIconUrl = new URL("./img/planet-icon.svg", import.meta.url).href;
 const earthTextureUrl = new URL("./img/Earth.jpg", import.meta.url).href;
 const marsTextureUrl = new URL("./img/Mars.jpg", import.meta.url).href;
+const soaringAudioUrl = new URL("./song/Soaring.mp3", import.meta.url).href;
 const app = document.querySelector<HTMLDivElement>("#app");
 
 if (!app) {
@@ -217,6 +218,12 @@ app.innerHTML = `
       <div class="topbar-actions">
         <button class="topbar-motion-toggle" type="button" aria-label="Low motion" aria-pressed="false">
           LOW MOTION <span class="motion-switch" aria-hidden="true"><span></span></span>
+        </button>
+        <button class="topbar-audio-toggle" type="button" aria-label="Mute audio" aria-pressed="false" title="Mute audio">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 10v4h4l5 4V6l-5 4H4Z" />
+            <path class="audio-wave" d="M16 9a5 5 0 0 1 0 6m2-9a9 9 0 0 1 0 12" />
+          </svg>
         </button>
         <button class="topbar-nav-button" type="button" aria-haspopup="dialog">
           WHY BODÉLÉ?
@@ -330,47 +337,101 @@ app.innerHTML = `
         </header>
         <h2 id="research-title">Why the Bodélé Depression?</h2>
         <p class="research-intro">
-          We selected the Chicha field corridor as a candidate Earth site for studying dust, wind, visibility,
-          and instrument response relevant to the SkyFall Mars research context—not as a Mars flight simulator.
+          Bodélé is a candidate terrestrial field site for focused experiments on dust, wind, visibility, and
+          instrument response. Published observations at Chicha and regional wind-lens research make it a
+          useful place to test selected SkyFall workflows—not to reproduce Mars or validate a Mars flight envelope.
         </p>
         <div class="research-facts" aria-label="Site facts">
           <div><span>FIELD REFERENCE</span><strong>Chicha, Chad</strong></div>
           <div><span>COORDINATES</span><strong>16.88° N · 18.53° E</strong></div>
           <div><span>ELEVATION</span><strong>179 m</strong></div>
-          <div><span>EVIDENCE BASE</span><strong>BoDEx 2005 · 2003–2023 regional analysis</strong></div>
+          <div><span>EVIDENCE BASE</span><strong>BoDEx 2005 · published 2025 regional study</strong></div>
         </div>
         <section class="research-reasons" aria-labelledby="reasons-title">
           <h3 id="reasons-title">Reasons for the choice</h3>
           <ol>
             <li>
-              <strong>Published field observations.</strong>
-              BoDEx recorded meteorology and aerosol behaviour at the Chicha field site, giving the study a
-              traceable observational foundation.
+              <strong>A documented field reference.</strong>
+              The 2005 Bodélé Dust Experiment (BoDEx) recorded meteorology and aerosol processes at Chicha.
+              Its published coordinate and elevation anchor the candidate to a real field location rather than
+              an assumed map point.
             </li>
             <li>
-              <strong>Active dust processes.</strong>
-              The depression’s exposed diatomite source and documented dust events make it relevant for
-              investigating dust transport, visibility, and sensor response.
+              <strong>Dust and visibility under real conditions.</strong>
+              Bodélé is a major Sahara dust source. During 10–12 March 2005, BoDEx observed a peak two-minute
+              surface wind of about 16 m/s; winds near 12 m/s were associated with large-scale deflation,
+              saltation, and suspension. These observations motivate camera, visibility, and dust-exposure
+              studies; they are not universal dust thresholds or safe operating limits.
             </li>
             <li>
-              <strong>A regional wind-lens setting.</strong>
-              A 2003–2023 ERA5/MODIS study reports strong, directionally organized winds and dust activity
-              around the surrounding pass and its exit.
+              <strong>A regional wind-lens mechanism.</strong>
+              A published 2025 study used 2003–2023 ERA5 and MODIS data to examine wind and dust around the
+              mountain pass. It reports winds nearly doubling through the pass, an approximately 8 m/s regime
+              split at the exit, and a strong-emission direction cluster near 48°. These are regional study
+              diagnostics, not pad-scale forecasts or flight rules.
             </li>
             <li>
-              <strong>A testable field-corridor concept.</strong>
-              A desert-pavement corridor near the source margin may be a more defensible staging candidate
-              than the active plume core, while transects can examine nearby source material.
+              <strong>A candidate corridor away from the source core.</strong>
+              The proposed concept is a stable desert-pavement staging area near the eastern/southeastern
+              margin of the exposed diatomite, with instrument transects toward the source. This may avoid
+              placing equipment directly in the active plume core, but the corridor is not surveyed and its
+              final pad suitability has not been assessed.
+            </li>
+            <li>
+              <strong>A useful seasonal planning context.</strong>
+              The regional study reports stronger, more aligned northeasterly flow and more frequent dust
+              events in autumn and winter; summer southwesterly monsoon flow may weaken or oppose that flow.
+              November–March is a planning window only. Campaign decisions should depend on forecasts and
+              on-site wind, gust, visibility, and dust measurements.
+            </li>
+          </ol>
+        </section>
+        <section class="research-reasons" aria-labelledby="test-objectives-title">
+          <h3 id="test-objectives-title">What SkyFall could test here</h3>
+          <ol>
+            <li>
+              <strong>Visible and near-infrared imaging.</strong>
+              Measure how dust haze affects contrast, target detection, image quality, and recovery after
+              events. Assess visible and near-infrared camera response separately rather than assuming they
+              respond to dust in the same way.
+            </li>
+            <li>
+              <strong>Wind and temperature sensing.</strong>
+              Deploy calibrated wind sensors at multiple heights and shielded temperature sensors to study
+              local profiles and diurnal changes. A single 10 m reanalysis value or historical surface
+              observation cannot establish rotor-height gust conditions.
+            </li>
+            <li>
+              <strong>Dust resuspension procedures.</strong>
+              Controlled future experiments could examine particle resuspension and optical obscuration
+              caused by induced airflow. The brief reports no completed rotor-wash test, so this is a proposed
+              activity that needs protocols and safety limits.
+            </li>
+            <li>
+              <strong>Ground-penetrating radar workflows.</strong>
+              GPR can be evaluated against surveyed, characterized shallow targets. Diatomite is not
+              automatically a Martian regolith or ice analogue, and no subsurface-ice suitability is established.
+            </li>
+            <li>
+              <strong>Thermal and radiation instrument workflows.</strong>
+              Field deployment can exercise sensing, logging, and calibration procedures. Chad temperature
+              and surface radiation are not Mars environmental measurements; direct Mars comparisons require
+              matched data and appropriate context.
             </li>
           </ol>
         </section>
         <aside class="research-caveat">
           <strong>Scientific and operational limits</strong>
           <p>
-            The coordinate is a published field-site point, not a surveyed landing-pad boundary. Present-day
-            access, permits, safety, ground conditions, and dust hazards remain unverified. Regional findings
-            are not pad-scale forecasts, and Bodélé cannot reproduce Mars’ low atmospheric density or gravity.
-            No single numerical Earth–Mars analogue score is claimed.
+            Chicha is a published field-site point, not a surveyed pad boundary. Regional study boxes and
+            historical winds do not describe pad-scale turbulence or rotor-height gusts. Access, permissions,
+            ground conditions, communications, medical/evacuation planning, and dust hazards require field
+            assessment. Bodélé cannot reproduce Mars atmospheric density, gravity, aerosol composition,
+            particle charging, or spectral conditions. The brief also distinguishes the team's 2025 ERA5
+            processing from the published 2003–2023 ERA5/MODIS study; MERRA-2 and MODIS MAIAC were not
+            acquired or processed by the team. Environmental similarity, instrument stress-test value, and
+            field feasibility should remain separate assessments; no composite score or global-optimality
+            claim is supported.
           </p>
         </aside>
         <section class="research-sources" aria-labelledby="sources-title">
@@ -401,6 +462,7 @@ const closeButton = app.querySelector<HTMLButtonElement>(".close-button");
 const researchCloseButton = app.querySelector<HTMLButtonElement>(".research-close-button");
 const researchNavButton = app.querySelector<HTMLButtonElement>(".topbar-nav-button");
 const motionToggleButton = app.querySelector<HTMLButtonElement>(".topbar-motion-toggle");
+const audioToggleButton = app.querySelector<HTMLButtonElement>(".topbar-audio-toggle");
 const previousSlideButton = app.querySelector<HTMLButtonElement>(".slide-previous");
 const nextSlideButton = app.querySelector<HTMLButtonElement>(".slide-next");
 const previousPlanetButton = app.querySelector<HTMLButtonElement>(".planet-switch-previous");
@@ -452,6 +514,7 @@ if (
   !researchCloseButton ||
   !researchNavButton ||
   !motionToggleButton ||
+  !audioToggleButton ||
   !previousSlideButton ||
   !nextSlideButton ||
   !previousPlanetButton ||
@@ -478,6 +541,238 @@ if (
 ) {
   throw new Error("Detail display elements were not found.");
 }
+
+const backgroundAudio = new Audio(soaringAudioUrl);
+backgroundAudio.loop = true;
+backgroundAudio.volume = 0.35;
+let audioStartPending = false;
+let audioResumeListenersInstalled = false;
+let interfaceAudioContext: AudioContext | null = null;
+let interfaceAudioGain: GainNode | null = null;
+let interfaceAudioResumePending = false;
+let interfaceAudioResumeBlocked = false;
+
+const removeAudioResumeListeners = () => {
+  document.removeEventListener("pointerdown", handleAudioResume);
+  document.removeEventListener("keydown", handleAudioResume);
+  audioResumeListenersInstalled = false;
+};
+
+const startBackgroundAudio = () => {
+  if (!backgroundAudio.paused || audioStartPending) {
+    return;
+  }
+
+  audioStartPending = true;
+  backgroundAudio.play().then(
+    () => {
+      audioStartPending = false;
+      removeAudioResumeListeners();
+    },
+    (error: unknown) => {
+      audioStartPending = false;
+      if (error instanceof DOMException && error.name === "NotAllowedError") {
+        if (!audioResumeListenersInstalled) {
+          audioResumeListenersInstalled = true;
+          document.addEventListener("pointerdown", handleAudioResume, { once: true });
+          document.addEventListener("keydown", handleAudioResume, { once: true });
+        }
+        return;
+      }
+
+      console.error("Unable to play the background audio.", error);
+    },
+  );
+};
+
+const handleAudioResume = () => {
+  audioResumeListenersInstalled = false;
+  startBackgroundAudio();
+};
+
+backgroundAudio.addEventListener("error", () => {
+  console.error("Unable to load the background audio.", backgroundAudio.error);
+});
+
+audioToggleButton.addEventListener("click", () => {
+  backgroundAudio.muted = !backgroundAudio.muted;
+  const isMuted = backgroundAudio.muted;
+  const label = isMuted ? "Unmute audio" : "Mute audio";
+  audioToggleButton.setAttribute("aria-label", label);
+  audioToggleButton.setAttribute("title", label);
+  audioToggleButton.setAttribute("aria-pressed", String(isMuted));
+  if (interfaceAudioContext && interfaceAudioGain) {
+    interfaceAudioGain.gain.setTargetAtTime(
+      isMuted ? 0 : 0.18,
+      interfaceAudioContext.currentTime,
+      0.02,
+    );
+  }
+  if (!isMuted) {
+    startBackgroundAudio();
+  }
+});
+
+const playInterfaceTone = (kind: "hover" | "click" | "typewriter") => {
+  if (backgroundAudio.muted || interfaceAudioResumeBlocked) {
+    return;
+  }
+
+  if (!interfaceAudioContext) {
+    interfaceAudioContext = new AudioContext();
+    interfaceAudioGain = interfaceAudioContext.createGain();
+    interfaceAudioGain.gain.value = 0.18;
+    interfaceAudioGain.connect(interfaceAudioContext.destination);
+  }
+
+  const context = interfaceAudioContext;
+  const masterGain = interfaceAudioGain;
+  if (!masterGain) {
+    throw new Error("Interface sound effects audio gain was not initialized.");
+  }
+
+  const playTone = () => {
+    if (backgroundAudio.muted || context.state !== "running") {
+      return;
+    }
+
+    const isHover = kind === "hover";
+    const isTypewriter = kind === "typewriter";
+    const duration = isHover ? 0.045 : isTypewriter ? 0.024 : 0.075;
+    const now = context.currentTime;
+    const oscillator = context.createOscillator();
+    const noteGain = context.createGain();
+    oscillator.type = isTypewriter ? "triangle" : "sine";
+    oscillator.frequency.setValueAtTime(isHover ? 660 : isTypewriter ? 1100 : 880, now);
+    oscillator.frequency.exponentialRampToValueAtTime(
+      isHover ? 520 : isTypewriter ? 620 : 560,
+      now + duration,
+    );
+    noteGain.gain.setValueAtTime(0.0001, now);
+    noteGain.gain.exponentialRampToValueAtTime(
+      isHover ? 0.24 : isTypewriter ? 0.2 : 0.34,
+      now + 0.004,
+    );
+    noteGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    oscillator.connect(noteGain);
+    noteGain.connect(masterGain);
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.01);
+  };
+
+  if (context.state === "suspended") {
+    if (!interfaceAudioResumePending) {
+      interfaceAudioResumePending = true;
+      context.resume().then(
+        () => {
+          interfaceAudioResumePending = false;
+          playTone();
+        },
+        (error: unknown) => {
+          interfaceAudioResumePending = false;
+          if (error instanceof DOMException && error.name === "NotAllowedError") {
+            interfaceAudioResumeBlocked = true;
+            return;
+          }
+
+          console.error("Unable to resume interface sound effects.", error);
+        },
+      );
+    }
+    return;
+  }
+
+  playTone();
+};
+
+const typewriterSoundTimers = new WeakMap<HTMLElement, number[]>();
+const stopTypewriterSound = (label: HTMLElement) => {
+  const timers = typewriterSoundTimers.get(label);
+  if (!timers) {
+    return;
+  }
+
+  timers.forEach(window.clearTimeout);
+  typewriterSoundTimers.delete(label);
+};
+
+app.addEventListener("animationstart", (event: AnimationEvent) => {
+  if (event.animationName !== "focus-point-typewriter" || !(event.target instanceof HTMLElement)) {
+    return;
+  }
+
+  const label = event.target;
+  const style = window.getComputedStyle(label);
+  const durationText = style.animationDuration.split(",")[0]?.trim() ?? "";
+  const duration = Number.parseFloat(durationText);
+  const durationMs = durationText.endsWith("ms") ? duration : duration * 1000;
+  const stepCount = Number.parseInt(style.getPropertyValue("--marker-label-steps"), 10);
+  if (!Number.isFinite(durationMs) || !Number.isFinite(stepCount) || durationMs <= 0 || stepCount < 1) {
+    return;
+  }
+
+  stopTypewriterSound(label);
+  const timers = Array.from({ length: stepCount }, (_, index) =>
+    window.setTimeout(
+      () => playInterfaceTone("typewriter"),
+      Math.round((durationMs * index) / stepCount),
+    ),
+  );
+  typewriterSoundTimers.set(label, timers);
+});
+
+const handleTypewriterAnimationEnd = (event: AnimationEvent) => {
+  if (
+    event.animationName === "focus-point-typewriter" &&
+    event.target instanceof HTMLElement
+  ) {
+    stopTypewriterSound(event.target);
+  }
+};
+
+app.addEventListener("animationend", handleTypewriterAnimationEnd);
+app.addEventListener("animationcancel", handleTypewriterAnimationEnd);
+
+app.addEventListener("pointerover", (event: PointerEvent) => {
+  if (event.pointerType !== "mouse" && event.pointerType !== "pen") {
+    return;
+  }
+
+  const target = event.target;
+  if (!(target instanceof Element)) {
+    return;
+  }
+
+  const button = target.closest("button");
+  if (
+    !button ||
+    button.disabled ||
+    (event.relatedTarget instanceof Node && button.contains(event.relatedTarget))
+  ) {
+    return;
+  }
+
+  playInterfaceTone("hover");
+});
+
+app.addEventListener(
+  "click",
+  (event: MouseEvent) => {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+  return;
+    }
+
+    const button = target.closest("button");
+    if (button && !button.disabled) {
+  interfaceAudioResumeBlocked = false;
+  playInterfaceTone("click");
+    }
+  },
+  true,
+);
+
+startBackgroundAudio();
 
 const earthGlobe = new Globe(earthGlobeContainer, {
   animateIn: false,
@@ -1107,6 +1402,19 @@ const addPlanetMarkers = (planetId: PlanetId) => {
       marker.dataset.note = note.number;
       marker.setAttribute("aria-haspopup", "dialog");
       marker.setAttribute("aria-label", `Explore ${note.category}: ${note.title}`);
+      const locationLabel = planetId === "earth" ? "Bodélé Depression" : "Mars";
+      marker.style.setProperty(
+        "--marker-label-steps",
+        String(Array.from(locationLabel).length + 1),
+      );
+      const markerLabel = document.createElement("span");
+      markerLabel.className = "earth-marker-label";
+      markerLabel.textContent = locationLabel;
+      markerLabel.setAttribute("aria-hidden", "true");
+      if (planetId === "mars") {
+        markerLabel.style.setProperty("--marker-label-duration", "300ms");
+      }
+      marker.append(markerLabel);
       marker.addEventListener("click", () => openNote(note, marker, planetId));
 
       return marker;
