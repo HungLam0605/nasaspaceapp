@@ -685,6 +685,16 @@ h1 .hero-earth {
   padding: 0 2px;
 }
 
+.footer-credit {
+  display: block;
+  margin-top: 4px;
+  color: #696965;
+  font-size: 7px;
+  letter-spacing: 0.04em;
+  text-align: right;
+  text-transform: none;
+}
+
 .return-focus-button {
   position: fixed;
   z-index: 3;

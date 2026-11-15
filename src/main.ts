@@ -309,7 +309,10 @@ app.innerHTML = `
 
     <footer class="footer">
       <span>NASA SPACEAPPS CHALLENGE<span class="footer-dot">©</span> 2026</span>
-      <span>EARTH TO MARS ANALOGUE</span>
+      <span>
+        EARTH TO MARS ANALOGUE
+        <span class="footer-credit">Website coded with the assistance of Gen AI</span>
+      </span>
     </footer>
 
     <span class="cursor-glow" aria-hidden="true"></span>
