@@ -129,7 +129,7 @@ const notes: Record<PlanetId, Note[]> = {
   ],
   mars: [
     {
-      number: "01",
+      number: "",
       category: "Mars · Representative location",
       title: "A thin, dusty atmosphere",
       slides: [
@@ -329,7 +329,10 @@ app.innerHTML = `
         </div>
         <div class="detail-content">
           <span class="detail-number" data-detail-number></span>
-          <h2 id="dialog-title" data-detail-title></h2>
+          <h2 id="dialog-title">
+            <span class="detail-title-layer" data-detail-title-layer="0" aria-hidden="true"></span>
+            <span class="detail-title-layer" data-detail-title-layer="1" aria-hidden="true"></span>
+          </h2>
           <div class="detail-description-panel">
             <div class="detail-description-slides" aria-live="polite">
               <div class="detail-description-slide" data-detail-description="0" aria-hidden="true">
@@ -518,9 +521,13 @@ const nextPlanetButton = app.querySelector<HTMLButtonElement>(".planet-switch-ne
 const intro = app.querySelector<HTMLElement>(".intro");
 const category = app.querySelector<HTMLElement>("[data-detail-category]");
 const number = app.querySelector<HTMLElement>("[data-detail-number]");
-const title = app.querySelector<HTMLElement>("[data-detail-title]");
+const titleHeading = app.querySelector<HTMLHeadingElement>("#dialog-title");
+const titleLayers = Array.from(
+  app.querySelectorAll<HTMLSpanElement>("[data-detail-title-layer]"),
+);
 const firstDescription = app.querySelector<HTMLDivElement>('[data-detail-description="0"]');
 const secondDescription = app.querySelector<HTMLDivElement>('[data-detail-description="1"]');
+const descriptionSlides = app.querySelector<HTMLDivElement>(".detail-description-slides");
 const slideCount = app.querySelector<HTMLElement>(".detail-slide-count");
 const firstSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-background="0"]');
 const secondSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-background="1"]');
@@ -571,9 +578,11 @@ if (
   !intro ||
   !category ||
   !number ||
-  !title ||
+  !titleHeading ||
+  titleLayers.length !== 2 ||
   !firstDescription ||
   !secondDescription ||
+  !descriptionSlides ||
   !slideCount ||
   !firstSlideBackground ||
   !secondSlideBackground ||
@@ -1161,7 +1170,12 @@ const resetDescriptionLayer = (layer: HTMLDivElement) => {
     throw new Error("Description slide content elements were not found.");
   }
 
-  layer.classList.remove("is-active", "is-incoming", "is-fading-in", "is-fading-out");
+  layer.classList.remove(
+    "is-active",
+    "is-incoming",
+    "is-fading-in",
+    "is-fading-out",
+  );
   layer.setAttribute("aria-hidden", "true");
   copy.textContent = "";
   chart.hidden = true;
@@ -1250,6 +1264,25 @@ const setPhotoCredit = (slide: DetailSlide) => {
   );
 };
 
+const animateChartBars = (layer: HTMLDivElement) => {
+  if (prefersReducedMotion) {
+    return;
+  }
+
+  layer.querySelectorAll<HTMLElement>(".detail-chart-bar").forEach((bar) => {
+    bar.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], {
+      duration: 450,
+      easing: "ease-out",
+    });
+  });
+};
+
+const cancelChartBarAnimations = (layer: HTMLDivElement) => {
+  layer.querySelectorAll<HTMLElement>(".detail-chart-bar").forEach((bar) => {
+    bar.getAnimations().forEach((animation) => animation.cancel());
+  });
+};
+
 const renderSlide = (note: Note) => {
   const slide = note.slides[activeSlideIndex];
   if (!slide) {
@@ -1261,6 +1294,14 @@ const renderSlide = (note: Note) => {
   descriptionLayers.forEach((layer) => {
     resetDescriptionLayer(layer);
   });
+  descriptionSlides.style.height = "";
+  titleHeading.style.height = "";
+  titleLayers.forEach((layer, index) => {
+    layer.textContent = index === activeSlideLayerIndex ? slide.heading : "";
+    layer.setAttribute("aria-hidden", String(index !== activeSlideLayerIndex));
+    layer.classList.remove("is-active", "is-incoming", "is-fading-in", "is-fading-out");
+  });
+  titleLayers[activeSlideLayerIndex]?.classList.add("is-active");
   backgroundLayers.forEach((layer) => {
     layer.classList.remove("is-active", "is-incoming", "is-fading-in");
     layer.style.backgroundImage = "";
@@ -1273,11 +1314,11 @@ const renderSlide = (note: Note) => {
     throw new Error("Active slide layers were not found.");
   }
 
-  title.textContent = slide.heading;
   setPhotoCredit(slide);
   populateDescriptionLayer(activeDescriptionLayer, slide);
   activeDescriptionLayer.setAttribute("aria-hidden", "false");
   activeDescriptionLayer.classList.add("is-active");
+  animateChartBars(activeDescriptionLayer);
   activeBackgroundLayer.style.backgroundImage = slide.background
     ? `url("${slide.background}")`
     : "";
@@ -1324,8 +1365,36 @@ const changeSlide = (direction: -1 | 1) => {
   previousSlideButton.disabled = true;
   nextSlideButton.disabled = true;
 
-  title.textContent = nextSlide.heading;
+  const currentDescriptionHeight = descriptionSlides.getBoundingClientRect().height;
+  descriptionSlides.style.height = `${currentDescriptionHeight}px`;
+  void descriptionSlides.offsetHeight;
   populateDescriptionLayer(nextDescription, nextSlide);
+  previousDescription.style.display = "none";
+  descriptionSlides.style.height = "auto";
+  const nextDescriptionHeight = descriptionSlides.getBoundingClientRect().height;
+  previousDescription.style.display = "";
+  descriptionSlides.style.height = `${currentDescriptionHeight}px`;
+  void descriptionSlides.offsetHeight;
+  descriptionSlides.style.height = `${nextDescriptionHeight}px`;
+  const previousTitle = titleLayers[previousLayerIndex];
+  const nextTitle = titleLayers[nextLayerIndex];
+  if (!previousTitle || !nextTitle) {
+    throw new Error("Slide transition titles were not found.");
+  }
+  const currentTitleHeight = titleHeading.getBoundingClientRect().height;
+  titleHeading.style.height = `${currentTitleHeight}px`;
+  void titleHeading.offsetHeight;
+  nextTitle.textContent = nextSlide.heading;
+  previousTitle.style.display = "none";
+  titleHeading.style.height = "auto";
+  const nextTitleHeight = titleHeading.getBoundingClientRect().height;
+  previousTitle.style.display = "";
+  titleHeading.style.height = `${currentTitleHeight}px`;
+  void titleHeading.offsetHeight;
+  titleHeading.style.height = `${nextTitleHeight}px`;
+  nextTitle.setAttribute("aria-hidden", "false");
+  nextTitle.classList.add("is-incoming");
+  previousTitle.setAttribute("aria-hidden", "true");
   nextAction.disabled = true;
   nextDescription.setAttribute("aria-hidden", "false");
   nextDescription.classList.add("is-incoming");
@@ -1343,11 +1412,21 @@ const changeSlide = (direction: -1 | 1) => {
 
   slideTransitionFrame = requestAnimationFrame(() => {
     slideTransitionFrame = 0;
+    cancelChartBarAnimations(previousDescription);
+    previousTitle.classList.add("is-fading-out");
+    nextTitle.classList.add("is-fading-in");
     previousDescription.classList.add("is-fading-out");
     nextDescription.classList.add("is-fading-in");
     nextBackground.classList.add("is-fading-in");
+    animateChartBars(nextDescription);
     slideTransitionTimeout = window.setTimeout(() => {
       slideTransitionTimeout = 0;
+      descriptionSlides.style.height = "";
+      previousTitle.textContent = "";
+      previousTitle.classList.remove("is-active", "is-fading-out");
+      nextTitle.classList.remove("is-incoming", "is-fading-in");
+      nextTitle.classList.add("is-active");
+      titleHeading.style.height = "";
       resetDescriptionLayer(previousDescription);
       previousBackground.classList.remove("is-active");
       previousBackground.style.backgroundImage = "";
@@ -1431,7 +1510,6 @@ const openNote = (note: Note, marker: HTMLButtonElement, planetId: PlanetId) => 
   activeSlideLayerIndex = 0;
   category.textContent = note.category;
   number.textContent = note.number;
-  title.textContent = note.title;
   renderSlide(note);
   globe.pointOfView(
     { lat: note.lat, lng: note.lng, altitude: 0.45 },
@@ -1654,6 +1732,13 @@ const closeNote = () => {
 
   window.clearTimeout(slideTransitionTimeout);
   slideTransitionTimeout = 0;
+  titleLayers.forEach((layer) => {
+    layer.classList.remove("is-incoming", "is-fading-in", "is-fading-out");
+  });
+  cancelChartBarAnimations(firstDescription);
+  cancelChartBarAnimations(secondDescription);
+  titleHeading.style.height = "";
+  descriptionSlides.style.height = "";
   if (slideTransitionFrame) {
     cancelAnimationFrame(slideTransitionFrame);
     slideTransitionFrame = 0;

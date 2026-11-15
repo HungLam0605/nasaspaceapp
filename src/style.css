@@ -996,11 +996,28 @@ h1 .hero-earth {
 }
 
 .detail-content h2 {
+  display: grid;
   margin: 20px 0 18px;
   font-size: clamp(42px, 8vw, 76px);
   font-weight: 500;
   letter-spacing: -0.08em;
   line-height: 0.95;
+  transition: height 900ms ease;
+}
+
+.detail-title-layer {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.detail-title-layer.is-active,
+.detail-title-layer.is-fading-in {
+  opacity: 1;
+}
+
+.detail-title-layer.is-fading-out {
+  opacity: 0;
 }
 
 .detail-content p {
@@ -1014,6 +1031,7 @@ h1 .hero-earth {
 .detail-description-slides {
   display: grid;
   max-width: 600px;
+  transition: height 900ms ease;
 }
 
 .detail-description-slide {
@@ -1071,7 +1089,7 @@ h1 .hero-earth {
 
 .detail-chart-row {
   display: grid;
-  grid-template-columns: minmax(110px, 1fr) minmax(70px, 1.5fr) auto;
+  grid-template-columns: 110px minmax(70px, 1fr) 96px;
   align-items: center;
   gap: 10px;
 }
@@ -1085,6 +1103,11 @@ h1 .hero-earth {
   line-height: 1.4;
 }
 
+.detail-chart-value {
+  text-align: right;
+  white-space: nowrap;
+}
+
 .detail-chart-track {
   display: block;
   height: 5px;
@@ -1096,6 +1119,8 @@ h1 .hero-earth {
   display: block;
   height: 100%;
   background: #d3a078;
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .detail-content .detail-chart-note {
@@ -1256,7 +1281,6 @@ h1 .hero-earth {
 }
 
 .research-facts span,
-.research-reasons h3,
 .research-sources h3 {
   color: #9c9c96;
   font-family: var(--mono);
@@ -1264,6 +1288,15 @@ h1 .hero-earth {
   font-weight: 400;
   letter-spacing: 0.11em;
   text-transform: uppercase;
+}
+
+.research-reasons h3 {
+  color: #f6f6f4;
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  text-transform: none;
 }
 
 .research-facts strong {
@@ -1275,6 +1308,12 @@ h1 .hero-earth {
 .research-reasons h3,
 .research-sources h3 {
   margin: 0 0 20px;
+}
+
+.research-reasons + .research-reasons {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
 }
 
 .research-reasons ol {
@@ -1471,7 +1510,7 @@ h1 .hero-earth {
   }
 
   .detail-chart-row {
-    grid-template-columns: minmax(82px, 1fr) minmax(48px, 1.1fr) auto;
+    grid-template-columns: 80px minmax(36px, 1fr) 82px;
     gap: 7px;
   }
 
