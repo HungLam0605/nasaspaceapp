@@ -46,6 +46,9 @@ body {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+  transition:
+    opacity 450ms ease,
+    visibility 0s linear 450ms;
 }
 
 .loading-orbit {
@@ -956,10 +959,21 @@ h1 span {
   border: 0;
   background: #090909;
   color: #f6f6f4;
+  opacity: 0;
   pointer-events: auto;
+  transition: opacity 450ms ease;
 }
 
 .research-dialog::backdrop {
+  background: rgb(0 0 0 / 0%);
+  transition: background-color 450ms ease;
+}
+
+.research-dialog.is-visible {
+  opacity: 1;
+}
+
+.research-dialog.is-visible::backdrop {
   background: rgb(0 0 0 / 94%);
 }
 
@@ -1268,6 +1282,10 @@ h1 span {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .loading-screen.is-hidden {
+    transition-delay: 0s !important;
   }
 
   .cursor-glow {

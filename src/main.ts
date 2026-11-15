@@ -552,9 +552,11 @@ const prefersReducedMotion = window.matchMedia(
 ).matches;
 const transitionDuration = prefersReducedMotion ? 0 : 1000;
 const fadeDuration = prefersReducedMotion ? 0 : 900;
+const researchFadeDuration = prefersReducedMotion ? 0 : 450;
 const slideTransitionDuration = prefersReducedMotion ? 0 : 900;
 let heroIdleTimer = 0;
 let autoRotateRampFrame = 0;
+let researchCloseTimeout = 0;
 
 const updateReturnFocusButton = () => {
   const isVisible =
@@ -1124,14 +1126,35 @@ const closeNote = () => {
 };
 
 const openResearchPage = () => {
+  window.clearTimeout(researchCloseTimeout);
   if (!researchDialog.open) {
     researchDialog.showModal();
+    requestAnimationFrame(() => researchDialog.classList.add("is-visible"));
+  } else {
+    researchDialog.classList.add("is-visible");
   }
+};
+
+const closeResearchPage = () => {
+  if (!researchDialog.open) {
+    return;
+  }
+
+  researchDialog.classList.remove("is-visible");
+  window.clearTimeout(researchCloseTimeout);
+  researchCloseTimeout = window.setTimeout(
+    () => researchDialog.close(),
+    researchFadeDuration,
+  );
 };
 
 closeButton.addEventListener("click", closeNote);
 researchNavButton.addEventListener("click", openResearchPage);
-researchCloseButton.addEventListener("click", () => researchDialog.close());
+researchCloseButton.addEventListener("click", closeResearchPage);
+researchDialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeResearchPage();
+});
 app.querySelectorAll<HTMLButtonElement>("[data-slide-action]").forEach((button) => {
   button.addEventListener("click", openResearchPage);
 });
