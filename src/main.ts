@@ -1456,7 +1456,7 @@ const hideHeroAndScheduleReturn = () => {
       if (!dialog.open && !isTransitioning && !earthPointer?.isDragging) {
       intro.classList.remove("is-faded");
     }
-  }, 3500);
+  }, 2000);
 };
 
 const switchPlanet = () => {
