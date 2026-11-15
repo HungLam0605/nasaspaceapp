@@ -591,14 +591,17 @@ h1 .hero-earth {
 .earth-marker::before {
   position: absolute;
   inset: -14px;
+  box-sizing: border-box;
+  border: 1px solid transparent;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(255 255 255 / 48%), transparent 70%);
+  background: transparent;
   content: "";
-  animation: marker-pulse 2.4s ease-in-out infinite;
+  animation: marker-idle-ring-pulse 5s ease-out infinite;
   pointer-events: none;
   transition:
     inset 600ms ease,
-    background 600ms ease;
+    background 600ms ease,
+    border-color 600ms ease;
 }
 
 .earth-marker:hover,
@@ -617,8 +620,10 @@ h1 .hero-earth {
 
 .earth-marker:hover::before,
 .earth-marker:focus-visible::before {
-  inset: -30px;
+  inset: -22px;
+  border-color: rgb(255 255 255 / 90%);
   background: radial-gradient(circle, rgb(255 220 0 / 72%), transparent 70%);
+  animation: marker-hover-ring-pulse 1.4s ease-in-out infinite alternate;
 }
 
 .earth-marker-label {
@@ -1584,15 +1589,32 @@ h1 .hero-earth {
   }
 }
 
-@keyframes marker-pulse {
+@keyframes marker-idle-ring-pulse {
   0%,
-  100% {
-    transform: scale(0.82);
-    opacity: 0.65;
+  82% {
+    transform: scale(0.7);
+    opacity: 0;
+    border-color: transparent;
   }
 
-  50% {
-    transform: scale(1.18);
+  86% {
+    opacity: 0.85;
+    border-color: rgb(255 255 255 / 90%);
+  }
+
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+    border-color: transparent;
+  }
+}
+
+@keyframes marker-hover-ring-pulse {
+  from {
+    opacity: 0.35;
+  }
+
+  to {
     opacity: 1;
   }
 }
