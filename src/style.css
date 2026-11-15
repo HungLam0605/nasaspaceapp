@@ -1327,15 +1327,16 @@ h1 .hero-earth {
   .topbar {
     width: calc(100% + 40px);
     margin-left: -20px;
-    flex-wrap: wrap;
-    gap: 6px 12px;
-    padding: 8px 48px;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 8px 12px;
   }
 
   .wordmark {
-    gap: 7px;
-    font-size: 9px;
-    letter-spacing: 0.09em;
+    gap: 5px;
+    font-size: 8px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
   }
 
   .wordmark-icon {
@@ -1344,7 +1345,13 @@ h1 .hero-earth {
   }
 
   .topbar-actions {
-    gap: 10px;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  .topbar-audio-toggle {
+    width: 28px;
+    height: 28px;
   }
 
   .topbar-nav-button,
@@ -1353,6 +1360,11 @@ h1 .hero-earth {
     padding-bottom: 8px;
     font-size: 7px;
     letter-spacing: 0.06em;
+  }
+
+  .topbar-motion-toggle {
+    gap: 0;
+    font-size: 0;
   }
 
   .footer {
@@ -1465,8 +1477,8 @@ h1 .hero-earth {
   .topbar-nav-button {
     padding-left: 8px;
     padding-right: 8px;
-    font-size: 8px;
-    letter-spacing: 0.08em;
+    font-size: 7px;
+    letter-spacing: 0.04em;
   }
 
   .earth-marker {
