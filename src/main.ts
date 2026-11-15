@@ -7,6 +7,13 @@ type DetailSlide = {
   heading: string;
   description: string;
   metric?: string;
+  chart?: {
+    title: string;
+    scaleMax: number;
+    scaleLabel: string;
+    note?: string;
+    values: { label: string; value: number; display: string }[];
+  };
   source?: string;
   background?: string;
   actionLabel?: string;
@@ -42,6 +49,16 @@ const notes: Record<PlanetId, Note[]> = {
           description:
             "During a major dust event on 10–12 March 2005, BoDEx recorded a peak two-minute surface wind of 16 m/s. Large-scale deflation, saltation, and suspension were associated with winds near 12 m/s. These are field observations, not safe flight limits.",
           metric: "16 m/s · PEAK TWO-MINUTE SURFACE WIND",
+          chart: {
+            title: "BoDEx surface wind observations",
+            scaleMax: 20,
+            scaleLabel: "Scale: 0–20 m/s",
+            note: "The 12 m/s value is associated with widespread dust mobilization; 16 m/s was the peak two-minute surface wind during the March 2005 event.",
+            values: [
+              { label: "Dust mobilization", value: 12, display: "12 m/s" },
+              { label: "Event peak", value: 16, display: "16 m/s" },
+            ],
+          },
           source:
             "Washington et al. (2006), BoDEx observations; NASA/ASTER imagery (PIA11752).",
           background: "/assets/Bodele2.jpg",
@@ -51,6 +68,16 @@ const notes: Record<PlanetId, Note[]> = {
           description:
             "A 2003–2023 ERA5/MODIS analysis describes wind acceleration through the surrounding mountain pass and stronger dust-emission conditions at its exit. The study reports winds nearly doubling through the pass and a strong-emission direction cluster near 48°.",
           metric: "2003–2023 · REGIONAL REANALYSIS AND SATELLITE STUDY",
+          chart: {
+            title: "Reported wind amplification through the pass",
+            scaleMax: 2,
+            scaleLabel: "Relative wind speed",
+            note: "Schematic comparison: the study describes wind speeds as nearly doubled, not an exact fixed ratio.",
+            values: [
+              { label: "Upwind reference", value: 1, display: "1× reference" },
+              { label: "Through-pass flow", value: 2, display: "Nearly 2×" },
+            ],
+          },
           source: "2025 Geophysical Research Letters wind-lens study.",
           background: "/assets/Bodele3.jpg",
         },
@@ -79,6 +106,18 @@ const notes: Record<PlanetId, Note[]> = {
           description:
             "A supplied, previously compiled MEDA workbook reports a mean surface pressure of 720.71 Pa across 18,702 hourly records from sols 1–900. This is a provisional summary, not a complete reprocessing of the public archive.",
           metric: "720.71 Pa · MEAN PRESSURE · SOLS 1–900",
+          chart: {
+            title: "MEDA surface pressure summary",
+            scaleMax: 900,
+            scaleLabel: "Scale: 0–900 Pa",
+            note: "P05–P95 interval from a provisional user-supplied compilation; not a full archive reprocessing.",
+            values: [
+              { label: "5th percentile", value: 630.61, display: "630.61 Pa" },
+              { label: "Median", value: 734.27, display: "734.27 Pa" },
+              { label: "Mean", value: 720.71, display: "720.71 Pa" },
+              { label: "95th percentile", value: 789.44, display: "789.44 Pa" },
+            ],
+          },
           source: "User-supplied MEDA extract; NASA PDS MEDA archive; image: NASA/JPL-Caltech (PIA23764).",
           background: "/assets/MarsBG1.jpg",
         },
@@ -87,6 +126,16 @@ const notes: Record<PlanetId, Note[]> = {
           description:
             "The compiled MEDA extract reports a horizontal wind-speed mean of 3.376 m/s and a 95th percentile of 6.721 m/s. Wind appears in only 4,095 of 18,728 hourly rows, so these values do not describe full temporal coverage or gusts.",
           metric: "21.9% · HOURLY ROWS WITH WIND VALUES",
+          chart: {
+            title: "MEDA horizontal wind speed",
+            scaleMax: 8,
+            scaleLabel: "Scale: 0–8 m/s",
+            note: "Only 4,095 of 18,728 hourly rows contain wind values (21.9%); these summaries do not represent full temporal coverage or gusts.",
+            values: [
+              { label: "Mean", value: 3.376, display: "3.376 m/s" },
+              { label: "95th percentile", value: 6.721, display: "6.721 m/s" },
+            ],
+          },
           source:
             "User-supplied MEDA extract; image: NASA/JPL-Caltech/University of Arizona (PIA18244).",
           background: "/assets/MarsBG2.jpg",
@@ -96,6 +145,17 @@ const notes: Record<PlanetId, Note[]> = {
           description:
             "A quality-filtered Mars Climate Sounder extract reports dust opacity per kilometre at 21.6 µm. It is an extinction/opacity measure—not dust mass concentration or particle count—and comes from one four-hour orbital product.",
           metric: "MEAN 6.9 × 10⁻⁵ km⁻¹ · P95 4.17 × 10⁻⁴ km⁻¹",
+          chart: {
+            title: "MCS dust opacity at 21.6 µm",
+            scaleMax: 0.0005,
+            scaleLabel: "Scale: 0–5 × 10⁻⁴ km⁻¹",
+            note: "A quality-filtered extract from one four-hour product; opacity is not dust mass concentration or particle count.",
+            values: [
+              { label: "Median", value: 0.000004, display: "4 × 10⁻⁶ km⁻¹" },
+              { label: "Mean", value: 0.000069, display: "6.9 × 10⁻⁵ km⁻¹" },
+              { label: "95th percentile", value: 0.000417, display: "4.17 × 10⁻⁴ km⁻¹" },
+            ],
+          },
           source:
             "MCS DDR product, 1 July 2025, Ls ≈ 104.28°; NASA PDS; image: NASA/JPL-Caltech (PIA22737).",
           background: "/assets/MarsBG3.jpg",
@@ -201,12 +261,24 @@ app.innerHTML = `
             <div class="detail-description-slides" aria-live="polite">
               <div class="detail-description-slide" data-detail-description="0" aria-hidden="true">
                 <p class="detail-slide-copy" data-slide-copy></p>
+                <figure class="detail-chart" data-slide-chart hidden>
+                  <figcaption class="detail-chart-title" data-chart-title></figcaption>
+                  <div class="detail-chart-rows" data-chart-rows></div>
+                  <p class="detail-chart-note" data-chart-note hidden></p>
+                  <p class="detail-chart-scale" data-chart-scale></p>
+                </figure>
                 <p class="detail-slide-metric" data-slide-metric hidden></p>
                 <p class="detail-slide-source" data-slide-source hidden></p>
                 <button class="detail-slide-action" data-slide-action type="button" hidden></button>
               </div>
               <div class="detail-description-slide" data-detail-description="1" aria-hidden="true">
                 <p class="detail-slide-copy" data-slide-copy></p>
+                <figure class="detail-chart" data-slide-chart hidden>
+                  <figcaption class="detail-chart-title" data-chart-title></figcaption>
+                  <div class="detail-chart-rows" data-chart-rows></div>
+                  <p class="detail-chart-note" data-chart-note hidden></p>
+                  <p class="detail-chart-scale" data-chart-scale></p>
+                </figure>
                 <p class="detail-slide-metric" data-slide-metric hidden></p>
                 <p class="detail-slide-source" data-slide-source hidden></p>
                 <button class="detail-slide-action" data-slide-action type="button" hidden></button>
@@ -547,16 +619,101 @@ const resumeAutoRotate = () => {
   autoRotateRampFrame = requestAnimationFrame(rampSpeed);
 };
 
-const populateDescriptionLayer = (layer: HTMLDivElement, slide: DetailSlide) => {
+const resetDescriptionLayer = (layer: HTMLDivElement) => {
   const copy = layer.querySelector<HTMLParagraphElement>("[data-slide-copy]");
+  const chart = layer.querySelector<HTMLElement>("[data-slide-chart]");
+  const chartTitle = layer.querySelector<HTMLElement>("[data-chart-title]");
+  const chartRows = layer.querySelector<HTMLDivElement>("[data-chart-rows]");
+  const chartNote = layer.querySelector<HTMLParagraphElement>("[data-chart-note]");
+  const chartScale = layer.querySelector<HTMLParagraphElement>("[data-chart-scale]");
   const metric = layer.querySelector<HTMLParagraphElement>("[data-slide-metric]");
   const source = layer.querySelector<HTMLParagraphElement>("[data-slide-source]");
   const action = layer.querySelector<HTMLButtonElement>("[data-slide-action]");
-  if (!copy || !metric || !source || !action) {
+  if (
+    !copy ||
+    !chart ||
+    !chartTitle ||
+    !chartRows ||
+    !chartNote ||
+    !chartScale ||
+    !metric ||
+    !source ||
+    !action
+  ) {
+    throw new Error("Description slide content elements were not found.");
+  }
+
+  layer.classList.remove("is-active", "is-incoming", "is-fading-in", "is-fading-out");
+  layer.setAttribute("aria-hidden", "true");
+  copy.textContent = "";
+  chart.hidden = true;
+  chartTitle.textContent = "";
+  chartRows.replaceChildren();
+  chartNote.textContent = "";
+  chartNote.hidden = true;
+  chartScale.textContent = "";
+  metric.textContent = "";
+  metric.hidden = true;
+  source.textContent = "";
+  source.hidden = true;
+  action.textContent = "";
+  action.hidden = true;
+  action.disabled = true;
+};
+
+const populateDescriptionLayer = (layer: HTMLDivElement, slide: DetailSlide) => {
+  const copy = layer.querySelector<HTMLParagraphElement>("[data-slide-copy]");
+  const chart = layer.querySelector<HTMLElement>("[data-slide-chart]");
+  const chartTitle = layer.querySelector<HTMLElement>("[data-chart-title]");
+  const chartRows = layer.querySelector<HTMLDivElement>("[data-chart-rows]");
+  const chartNote = layer.querySelector<HTMLParagraphElement>("[data-chart-note]");
+  const chartScale = layer.querySelector<HTMLParagraphElement>("[data-chart-scale]");
+  const metric = layer.querySelector<HTMLParagraphElement>("[data-slide-metric]");
+  const source = layer.querySelector<HTMLParagraphElement>("[data-slide-source]");
+  const action = layer.querySelector<HTMLButtonElement>("[data-slide-action]");
+  if (
+    !copy ||
+    !chart ||
+    !chartTitle ||
+    !chartRows ||
+    !chartNote ||
+    !chartScale ||
+    !metric ||
+    !source ||
+    !action
+  ) {
     throw new Error("Description slide content elements were not found.");
   }
 
   copy.textContent = slide.description;
+  const chartData = slide.chart;
+  chart.hidden = !chartData;
+  chartRows.replaceChildren();
+  if (chartData) {
+    chartTitle.textContent = chartData.title;
+    chartNote.textContent = chartData.note ?? "";
+    chartNote.hidden = !chartData.note;
+    chartScale.textContent = chartData.scaleLabel;
+    chartData.values.forEach(({ label, value, display }) => {
+      const row = document.createElement("div");
+      row.className = "detail-chart-row";
+      const rowLabel = document.createElement("span");
+      rowLabel.className = "detail-chart-label";
+      rowLabel.textContent = label;
+      const track = document.createElement("span");
+      track.className = "detail-chart-track";
+      track.setAttribute("aria-hidden", "true");
+      const bar = document.createElement("span");
+      bar.className = "detail-chart-bar";
+      bar.style.width = `${Math.max(0, Math.min(value / chartData.scaleMax, 1) * 100)}%`;
+      track.append(bar);
+      const rowValue = document.createElement("span");
+      rowValue.className = "detail-chart-value";
+      rowValue.textContent = display;
+      row.append(rowLabel, track, rowValue);
+      chartRows.append(row);
+    });
+  }
   metric.textContent = slide.metric ?? "";
   metric.hidden = !slide.metric;
   source.textContent = slide.source ?? "";
@@ -575,14 +732,7 @@ const renderSlide = (note: Note) => {
   const descriptionLayers = [firstDescription, secondDescription];
   const backgroundLayers = [firstSlideBackground, secondSlideBackground];
   descriptionLayers.forEach((layer) => {
-    layer.classList.remove("is-active", "is-incoming", "is-fading-in", "is-fading-out");
-    layer.setAttribute("aria-hidden", "true");
-    const action = layer.querySelector<HTMLButtonElement>("[data-slide-action]");
-    if (!action) {
-      throw new Error("Description slide action was not found.");
-    }
-    action.hidden = true;
-    action.disabled = true;
+    resetDescriptionLayer(layer);
   });
   backgroundLayers.forEach((layer) => {
     layer.classList.remove("is-active", "is-incoming", "is-fading-in");
@@ -670,8 +820,7 @@ const changeSlide = (direction: -1 | 1) => {
     nextBackground.classList.add("is-fading-in");
     slideTransitionTimeout = window.setTimeout(() => {
       slideTransitionTimeout = 0;
-      previousDescription.classList.remove("is-active");
-      previousDescription.classList.remove("is-fading-out");
+      resetDescriptionLayer(previousDescription);
       previousBackground.classList.remove("is-active");
       previousBackground.style.backgroundImage = "";
       nextDescription.classList.remove("is-incoming", "is-fading-in");
