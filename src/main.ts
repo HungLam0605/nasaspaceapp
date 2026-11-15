@@ -603,8 +603,11 @@ returnFocusButton.addEventListener("click", () => {
 
 const resizeGlobe = () => {
   const isMobile = window.matchMedia("(max-width: 700px)").matches;
+  const widthBasedSize = isMobile
+    ? Math.min(window.innerWidth, 560) * 0.94
+    : window.innerWidth * 0.72;
   const displaySize = Math.min(
-    window.innerWidth * (isMobile ? 0.76 : 0.72),
+    widthBasedSize,
     window.innerHeight * (isMobile ? 0.65 : 0.78),
     isMobile ? 620 : 760,
   );
@@ -619,6 +622,7 @@ const earthGlobeResizeObserver = new ResizeObserver(resizeGlobe);
 const marsGlobeResizeObserver = new ResizeObserver(resizeGlobe);
 earthGlobeResizeObserver.observe(earthGlobeContainer);
 marsGlobeResizeObserver.observe(marsGlobeContainer);
+window.addEventListener("resize", resizeGlobe);
 resizeGlobe();
 
 document.addEventListener("pointermove", (event) => {

@@ -739,11 +739,11 @@ h1 span {
   }
 
   .planet-card-earth.is-unfocused {
-    transform: translate(calc(-50% - 43vw), -50%) scale(var(--planet-rest-scale, 1)) scale(0.4);
+    transform: translate(calc(-50% - 110vw), -50%) scale(var(--planet-rest-scale, 1)) scale(0.4);
   }
 
   .planet-card-mars.is-unfocused {
-    transform: translate(calc(-50% + 43vw), -50%) scale(var(--planet-rest-scale, 1)) scale(0.4);
+    transform: translate(calc(-50% + 110vw), -50%) scale(var(--planet-rest-scale, 1)) scale(0.4);
   }
 
   .planet-indicator {
@@ -751,13 +751,25 @@ h1 span {
   }
 
   .detail-card {
+    top: 24px;
+    bottom: 24px;
     width: min(600px, calc(100% - 24px));
-    max-height: calc(100% - 24px);
+    max-height: none;
+    justify-content: flex-start;
     padding: 22px;
+    transform: translate(-50%, 24px);
+  }
+
+  .detail-dialog.is-visible .detail-card {
+    transform: translate(-50%, 0);
   }
 
   .detail-content {
-    padding: 22px 0;
+    padding: 22px 0 0;
+  }
+
+  .detail-bottom {
+    margin-top: auto;
   }
 
   .detail-content p {
