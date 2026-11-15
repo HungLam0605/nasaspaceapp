@@ -16,6 +16,10 @@ type DetailSlide = {
   };
   source?: string;
   background?: string;
+  photoCredit: {
+    label: string;
+    href: string;
+  };
   actionLabel?: string;
 };
 
@@ -42,6 +46,10 @@ const notes: Record<PlanetId, Note[]> = {
           metric: "CHICHA FIELD SITE · 16.88° N, 18.53° E · 179 m",
           source: "Todd et al. (2007), BoDEx 2005 site observations.",
           background: "/assets/Bodele1.jpg",
+          photoCredit: {
+            label: "NASA Earthdata Worldview · MODIS Terra",
+            href: "https://wvs.earthdata.nasa.gov/",
+          },
           actionLabel: "Why choose Bodélé?",
         },
         {
@@ -62,6 +70,10 @@ const notes: Record<PlanetId, Note[]> = {
           source:
             "Washington et al. (2006), BoDEx observations; NASA/ASTER imagery (PIA11752).",
           background: "/assets/Bodele2.jpg",
+          photoCredit: {
+            label: "NASA/ASTER · PIA11752",
+            href: "https://photojournal.jpl.nasa.gov/catalog/PIA11752",
+          },
         },
         {
           heading: "A regional wind-lens effect",
@@ -80,6 +92,10 @@ const notes: Record<PlanetId, Note[]> = {
           },
           source: "2025 Geophysical Research Letters wind-lens study.",
           background: "/assets/Bodele3.jpg",
+          photoCredit: {
+            label: "NASA Earthdata Worldview · MODIS Terra",
+            href: "https://wvs.earthdata.nasa.gov/",
+          },
         },
         {
           heading: "Wind-lens behavior and campaign direction",
@@ -88,6 +104,10 @@ const notes: Record<PlanetId, Note[]> = {
           metric: "8 m/s · REGIME SPLIT · 48° DUST-EMISSION CLUSTER",
           source: "2025 Geophysical Research Letters wind-lens study; broad study boxes only.",
           background: "/assets/SkyFallSurveyBackground.jpg",
+          photoCredit: {
+            label: "NASA/JPL-Caltech/University of Arizona/USGS · PIA24814",
+            href: "https://photojournal.jpl.nasa.gov/catalog/PIA24814",
+          },
         },
         {
           heading: "A test-site candidate, not a surveyed pad",
@@ -97,6 +117,10 @@ const notes: Record<PlanetId, Note[]> = {
           source:
             "Site status from the supplied SkyFall research package; NASA Earthdata Worldview, MODIS Terra, 15 Jan 2025.",
           background: "/assets/Bodele4.jpg",
+          photoCredit: {
+            label: "NASA Earthdata Worldview · MODIS Terra · 15 Jan 2025",
+            href: "https://wvs.earthdata.nasa.gov/",
+          },
         },
       ],
       lat: 16.88,
@@ -128,6 +152,10 @@ const notes: Record<PlanetId, Note[]> = {
           },
           source: "User-supplied MEDA extract; NASA PDS MEDA archive; image: NASA/JPL-Caltech (PIA23764).",
           background: "/assets/MarsBG1.jpg",
+          photoCredit: {
+            label: "NASA/JPL-Caltech · PIA23764",
+            href: "https://photojournal.jpl.nasa.gov/catalog/PIA23764",
+          },
         },
         {
           heading: "Wind measurements have gaps",
@@ -147,6 +175,10 @@ const notes: Record<PlanetId, Note[]> = {
           source:
             "User-supplied MEDA extract; image: NASA/JPL-Caltech/University of Arizona (PIA18244).",
           background: "/assets/MarsBG2.jpg",
+          photoCredit: {
+            label: "NASA/JPL-Caltech/University of Arizona · PIA18244",
+            href: "https://photojournal.jpl.nasa.gov/catalog/PIA18244",
+          },
         },
         {
           heading: "MEDA signals are partial and easy to overread",
@@ -155,6 +187,10 @@ const notes: Record<PlanetId, Note[]> = {
           metric: "18,728 HOURLY ROWS · 4,095 WITH WIND · 16,008 WITH HUMIDITY",
           source: "User-supplied MEDA extract; verify sensor definitions and quality flags before interpreting.",
           background: "/assets/SkyFallSurveyBackground.jpg",
+          photoCredit: {
+            label: "NASA/JPL-Caltech/University of Arizona/USGS · PIA24814",
+            href: "https://photojournal.jpl.nasa.gov/catalog/PIA24814",
+          },
         },
         {
           heading: "Dust opacity is wavelength-specific",
@@ -175,6 +211,10 @@ const notes: Record<PlanetId, Note[]> = {
           source:
             "MCS DDR product, 1 July 2025, Ls ≈ 104.28°; NASA PDS; image: NASA/JPL-Caltech (PIA22737).",
           background: "/assets/MarsBG3.jpg",
+          photoCredit: {
+            label: "NASA/JPL-Caltech · PIA22737",
+            href: "https://photojournal.jpl.nasa.gov/catalog/PIA22737",
+          },
         },
         {
           heading: "An analogue has limits",
@@ -184,6 +224,10 @@ const notes: Record<PlanetId, Note[]> = {
           source:
             "SkyFall mission context; image: NASA/JPL-Caltech/University of Arizona/USGS (PIA24814).",
           background: "/assets/MarsBG4.jpg",
+          photoCredit: {
+            label: "NASA/JPL-Caltech/University of Arizona/USGS · PIA24814",
+            href: "https://photojournal.jpl.nasa.gov/catalog/PIA24814",
+          },
         },
       ],
       lat: 18.4,
@@ -320,6 +364,10 @@ app.innerHTML = `
           <span class="detail-slide-count" aria-live="polite"></span>
         </div>
       </article>
+      <p class="detail-photo-credit" aria-live="polite">
+        <span aria-hidden="true">PHOTO CREDIT: </span>
+        <a target="_blank" rel="noreferrer"></a>
+      </p>
       <button class="slide-button slide-previous" type="button" aria-label="Previous slide">
         <span aria-hidden="true">&lt;</span>
       </button>
@@ -476,6 +524,7 @@ const secondDescription = app.querySelector<HTMLDivElement>('[data-detail-descri
 const slideCount = app.querySelector<HTMLElement>(".detail-slide-count");
 const firstSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-background="0"]');
 const secondSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-background="1"]');
+const photoCreditLink = app.querySelector<HTMLAnchorElement>(".detail-photo-credit a");
 const earthGlobeContainer = app.querySelector<HTMLDivElement>(".earth-globe");
 const marsGlobeContainer = app.querySelector<HTMLDivElement>(".mars-globe");
 const starfield = app.querySelector<HTMLCanvasElement>(".starfield");
@@ -528,6 +577,7 @@ if (
   !slideCount ||
   !firstSlideBackground ||
   !secondSlideBackground ||
+  !photoCreditLink ||
   !earthGlobeContainer ||
   !marsGlobeContainer ||
   !starfield ||
@@ -1191,6 +1241,15 @@ const populateDescriptionLayer = (layer: HTMLDivElement, slide: DetailSlide) => 
   action.disabled = !slide.actionLabel;
 };
 
+const setPhotoCredit = (slide: DetailSlide) => {
+  photoCreditLink.textContent = slide.photoCredit.label;
+  photoCreditLink.href = slide.photoCredit.href;
+  photoCreditLink.setAttribute(
+    "aria-label",
+    `Photo credit: ${slide.photoCredit.label} (opens in a new tab)`,
+  );
+};
+
 const renderSlide = (note: Note) => {
   const slide = note.slides[activeSlideIndex];
   if (!slide) {
@@ -1215,6 +1274,7 @@ const renderSlide = (note: Note) => {
   }
 
   title.textContent = slide.heading;
+  setPhotoCredit(slide);
   populateDescriptionLayer(activeDescriptionLayer, slide);
   activeDescriptionLayer.setAttribute("aria-hidden", "false");
   activeDescriptionLayer.classList.add("is-active");
@@ -1295,6 +1355,7 @@ const changeSlide = (direction: -1 | 1) => {
       nextDescription.classList.add("is-active");
       nextBackground.classList.remove("is-incoming", "is-fading-in");
       nextBackground.classList.add("is-active");
+      setPhotoCredit(nextSlide);
       activeSlideLayerIndex = nextLayerIndex;
       isChangingSlide = false;
       nextAction.disabled = !nextSlide.actionLabel;
