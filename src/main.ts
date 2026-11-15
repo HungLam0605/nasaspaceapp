@@ -3,11 +3,20 @@ import "./style.css";
 
 type PlanetId = "earth" | "mars";
 
+type DetailSlide = {
+  heading: string;
+  description: string;
+  metric?: string;
+  source?: string;
+  background?: string;
+  actionLabel?: string;
+};
+
 type Note = {
   number: string;
   category: string;
   title: string;
-  slides: { description: string; background?: string }[];
+  slides: DetailSlide[];
   lat: number;
   lng: number;
 };
@@ -16,55 +25,100 @@ const notes: Record<PlanetId, Note[]> = {
   earth: [
     {
       number: "",
-      category: "Africa",
-      title: "Bodele Depression",
+      category: "Chad · Central Sahara",
+      title: "Bodélé Depression",
       slides: [
         {
-          description: "Follow the unexpected links between people, places, and ideas.",
+          heading: "A natural dust laboratory",
+          description:
+            "The Bodélé Depression is an active source of mineral dust in northern Chad. At the Chicha field site, the published BoDEx campaign documented meteorology and aerosol processes near exposed diatomite deposits.",
+          metric: "CHICHA FIELD SITE · 16.88° N, 18.53° E · 179 m",
+          source: "Todd et al. (2007), BoDEx 2005 site observations.",
           background: "/assets/Bodele1.jpg",
+          actionLabel: "Why choose Bodélé?",
         },
         {
+          heading: "Dust emission under strong winds",
           description:
-            "Notice how a change in one place can ripple across a landscape, a community, or an ecosystem.",
+            "During a major dust event on 10–12 March 2005, BoDEx recorded a peak two-minute surface wind of 16 m/s. Large-scale deflation, saltation, and suspension were associated with winds near 12 m/s. These are field observations, not safe flight limits.",
+          metric: "16 m/s · PEAK TWO-MINUTE SURFACE WIND",
+          source:
+            "Washington et al. (2006), BoDEx observations; NASA/ASTER imagery (PIA11752).",
           background: "/assets/Bodele2.jpg",
         },
         {
-          description: "Bring one of those connections into focus—and follow where it leads.",
+          heading: "A regional wind-lens effect",
+          description:
+            "A 2003–2023 ERA5/MODIS analysis describes wind acceleration through the surrounding mountain pass and stronger dust-emission conditions at its exit. The study reports winds nearly doubling through the pass and a strong-emission direction cluster near 48°.",
+          metric: "2003–2023 · REGIONAL REANALYSIS AND SATELLITE STUDY",
+          source: "2025 Geophysical Research Letters wind-lens study.",
           background: "/assets/Bodele3.jpg",
         },
+        {
+          heading: "A test-site candidate, not a surveyed pad",
+          description:
+            "The Chicha coordinate is a published field-site point. A stable desert-pavement corridor near the source margin is a candidate staging concept; access, permissions, ground conditions, evacuation routes, and dust hazards still require assessment. Bodélé can support environmental and instrument stress tests, but cannot reproduce Mars gravity or its thin atmosphere.",
+          metric: "REGIONAL DUST EVIDENCE: HIGH · CORRIDOR CANDIDATE: MODERATE",
+          source:
+            "Site status from the supplied SkyFall research package; NASA Earthdata Worldview, MODIS Terra, 15 Jan 2025.",
+          background: "/assets/Bodele4.jpg",
+        },
       ],
-      lat: 17,
-      lng: 18,
+      lat: 16.88,
+      lng: 18.53,
     },
   ],
   mars: [
     {
       number: "01",
-      category: "Mars · Site 01",
-      title: "A point to explore",
-      slides: [{ description: "Placeholder description for a location on Mars." }],
-      lat: 23.5,
-      lng: -132.4,
-    },
-    {
-      number: "02",
-      category: "Mars · Site 02",
-      title: "Another red-world marker",
-      slides: [{ description: "A second temporary point of interest on Mars." }],
-      lat: -13.9,
-      lng: -59.2,
-    },
-    {
-      number: "03",
-      category: "Mars · Site 03",
-      title: "A distant landmark",
-      slides: [{ description: "A third placeholder point for future Mars content." }],
-      lat: -5.4,
-      lng: 137.8,
+      category: "Mars · Jezero Crater",
+      title: "A thin, dusty atmosphere",
+      slides: [
+        {
+          heading: "Pressure at the surface",
+          description:
+            "A supplied, previously compiled MEDA workbook reports a mean surface pressure of 720.71 Pa across 18,702 hourly records from sols 1–900. This is a provisional summary, not a complete reprocessing of the public archive.",
+          metric: "720.71 Pa · MEAN PRESSURE · SOLS 1–900",
+          source: "User-supplied MEDA extract; NASA PDS MEDA archive; image: NASA/JPL-Caltech (PIA23764).",
+          background: "/assets/MarsBG1.jpg",
+        },
+        {
+          heading: "Wind measurements have gaps",
+          description:
+            "The compiled MEDA extract reports a horizontal wind-speed mean of 3.376 m/s and a 95th percentile of 6.721 m/s. Wind appears in only 4,095 of 18,728 hourly rows, so these values do not describe full temporal coverage or gusts.",
+          metric: "21.9% · HOURLY ROWS WITH WIND VALUES",
+          source:
+            "User-supplied MEDA extract; image: NASA/JPL-Caltech/University of Arizona (PIA18244).",
+          background: "/assets/MarsBG2.jpg",
+        },
+        {
+          heading: "Dust opacity is wavelength-specific",
+          description:
+            "A quality-filtered Mars Climate Sounder extract reports dust opacity per kilometre at 21.6 µm. It is an extinction/opacity measure—not dust mass concentration or particle count—and comes from one four-hour orbital product.",
+          metric: "MEAN 6.9 × 10⁻⁵ km⁻¹ · P95 4.17 × 10⁻⁴ km⁻¹",
+          source:
+            "MCS DDR product, 1 July 2025, Ls ≈ 104.28°; NASA PDS; image: NASA/JPL-Caltech (PIA22737).",
+          background: "/assets/MarsBG3.jpg",
+        },
+        {
+          heading: "An analogue has limits",
+          description:
+            "Mars observations help define the environmental context for dust, cameras, wind sensing, and other instruments. Earth-based Bodélé tests can stress-test dust response and visibility, but Earth’s atmospheric density and gravity differ fundamentally from Mars. They cannot validate a Mars rotorcraft flight envelope.",
+          metric: "MARS COMPARISONS REQUIRE MATCHED VARIABLES AND QUALITY FLAGS",
+          source:
+            "SkyFall mission context; image: NASA/JPL-Caltech/University of Arizona/USGS (PIA24814).",
+          background: "/assets/MarsBG4.jpg",
+        },
+      ],
+      lat: 18.4,
+      lng: 77.7,
     },
   ],
 };
 
+const planetIconUrl = new URL("./img/planet-icon.svg", import.meta.url).href;
+const earthTextureUrl = new URL("./img/Earth.jpg", import.meta.url).href;
+const marsTextureUrl = new URL("./img/Mars.jpg", import.meta.url).href;
 const app = document.querySelector<HTMLDivElement>("#app");
 
 if (!app) {
@@ -72,18 +126,26 @@ if (!app) {
 }
 
 app.innerHTML = `
+  <div class="loading-screen" role="region" aria-label="Loading page" aria-live="polite" aria-busy="true">
+    <span class="loading-orbit" aria-hidden="true"><span></span></span>
+    <p class="loading-title">Preparing your experience</p>
+    <p class="loading-message">Loading planets and assets</p>
+    <button class="loading-retry" type="button" hidden>Reload page</button>
+  </div>
   <main class="page-shell">
     <header class="topbar">
       <a class="wordmark" href="#" aria-label="NASA SpaceApps Challenge home">
-        <img class="wordmark-icon" src="${new URL("./img/planet-icon.svg", import.meta.url).href}" alt="" aria-hidden="true" />
+        <img class="wordmark-icon" src="${planetIconUrl}" alt="" aria-hidden="true" />
         NASA SPACEAPPS CHALLENGE
       </a>
-      <span class="topbar-note">A LITTLE SPACE TO EXPLORE</span>
+      <button class="topbar-nav-button" type="button" aria-haspopup="dialog">
+        WHY BODÉLÉ?
+      </button>
     </header>
 
     <section class="intro" aria-labelledby="page-title">
-      <p class="eyebrow"><span class="eyebrow-line"></span> A WORK IN PROGRESS</p>
-      <h1 id="page-title">Things worth<br /><span>a closer look.</span></h1>
+      <p class="eyebrow"><span class="eyebrow-line"></span>Analoguing skyfall testing conditions on Earth</p>
+      <h1 id="page-title">Mars <span>at home</span></h1>
       <div class="intro-bottom">
         <p>Choose a planet, drag to spin it, or select a point to explore.</p>
         <p class="instruction"><span aria-hidden="true">↘</span> DRAG TO SPIN · SELECT A POINT</p>
@@ -135,9 +197,21 @@ app.innerHTML = `
         <div class="detail-content">
           <span class="detail-number" data-detail-number></span>
           <h2 id="dialog-title" data-detail-title></h2>
-          <div class="detail-description-slides" aria-live="polite">
-            <p class="detail-description-slide" data-detail-description="0" aria-hidden="true"></p>
-            <p class="detail-description-slide" data-detail-description="1" aria-hidden="true"></p>
+          <div class="detail-description-panel">
+            <div class="detail-description-slides" aria-live="polite">
+              <div class="detail-description-slide" data-detail-description="0" aria-hidden="true">
+                <p class="detail-slide-copy" data-slide-copy></p>
+                <p class="detail-slide-metric" data-slide-metric hidden></p>
+                <p class="detail-slide-source" data-slide-source hidden></p>
+                <button class="detail-slide-action" data-slide-action type="button" hidden></button>
+              </div>
+              <div class="detail-description-slide" data-detail-description="1" aria-hidden="true">
+                <p class="detail-slide-copy" data-slide-copy></p>
+                <p class="detail-slide-metric" data-slide-metric hidden></p>
+                <p class="detail-slide-source" data-slide-source hidden></p>
+                <button class="detail-slide-action" data-slide-action type="button" hidden></button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="detail-bottom">
@@ -152,11 +226,86 @@ app.innerHTML = `
         <span aria-hidden="true">&gt;</span>
       </button>
     </dialog>
+    <dialog class="research-dialog" aria-labelledby="research-title">
+      <div class="research-page">
+        <header class="research-page-header">
+          <p class="eyebrow"><span class="eyebrow-line"></span> SITE SELECTION · CHAD</p>
+          <button class="close-button research-close-button" type="button" aria-label="Close site rationale">
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+        <h2 id="research-title">Why the Bodélé Depression?</h2>
+        <p class="research-intro">
+          We selected the Chicha field corridor as a candidate Earth site for studying dust, wind, visibility,
+          and instrument response relevant to the SkyFall Mars research context—not as a Mars flight simulator.
+        </p>
+        <div class="research-facts" aria-label="Site facts">
+          <div><span>FIELD REFERENCE</span><strong>Chicha, Chad</strong></div>
+          <div><span>COORDINATES</span><strong>16.88° N · 18.53° E</strong></div>
+          <div><span>ELEVATION</span><strong>179 m</strong></div>
+          <div><span>EVIDENCE BASE</span><strong>BoDEx 2005 · 2003–2023 regional analysis</strong></div>
+        </div>
+        <section class="research-reasons" aria-labelledby="reasons-title">
+          <h3 id="reasons-title">Reasons for the choice</h3>
+          <ol>
+            <li>
+              <strong>Published field observations.</strong>
+              BoDEx recorded meteorology and aerosol behaviour at the Chicha field site, giving the study a
+              traceable observational foundation.
+            </li>
+            <li>
+              <strong>Active dust processes.</strong>
+              The depression’s exposed diatomite source and documented dust events make it relevant for
+              investigating dust transport, visibility, and sensor response.
+            </li>
+            <li>
+              <strong>A regional wind-lens setting.</strong>
+              A 2003–2023 ERA5/MODIS study reports strong, directionally organized winds and dust activity
+              around the surrounding pass and its exit.
+            </li>
+            <li>
+              <strong>A testable field-corridor concept.</strong>
+              A desert-pavement corridor near the source margin may be a more defensible staging candidate
+              than the active plume core, while transects can examine nearby source material.
+            </li>
+          </ol>
+        </section>
+        <aside class="research-caveat">
+          <strong>Scientific and operational limits</strong>
+          <p>
+            The coordinate is a published field-site point, not a surveyed landing-pad boundary. Present-day
+            access, permits, safety, ground conditions, and dust hazards remain unverified. Regional findings
+            are not pad-scale forecasts, and Bodélé cannot reproduce Mars’ low atmospheric density or gravity.
+            No single numerical Earth–Mars analogue score is claimed.
+          </p>
+        </aside>
+        <section class="research-sources" aria-labelledby="sources-title">
+          <h3 id="sources-title">Selected sources</h3>
+          <ul>
+            <li><a href="https://doi.org/10.1029/2005JD006502" target="_blank" rel="noreferrer">Washington et al. (2006), BoDEx 2005 dust and low-level circulation observations</a></li>
+            <li><a href="https://doi.org/10.1029/2006JD007170" target="_blank" rel="noreferrer">Todd et al. (2007), mineral dust emission during BoDEx 2005</a></li>
+            <li><a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2025GL118979" target="_blank" rel="noreferrer">2025 Geophysical Research Letters study of the Bodélé wind-lens effect</a></li>
+            <li><a href="https://photojournal.jpl.nasa.gov/catalog/PIA11752" target="_blank" rel="noreferrer">NASA/ASTER, Bodele Sand Dunes, Chad (PIA11752)</a></li>
+            <li><a href="https://wvs.earthdata.nasa.gov/" target="_blank" rel="noreferrer">NASA Earthdata Worldview, MODIS Terra imagery (15 January 2025)</a></li>
+            <li><a href="https://photojournal.jpl.nasa.gov/catalog/PIA23764" target="_blank" rel="noreferrer">NASA/JPL-Caltech, Perseverance on Mars (PIA23764)</a></li>
+            <li><a href="https://photojournal.jpl.nasa.gov/catalog/PIA18244" target="_blank" rel="noreferrer">NASA/JPL-Caltech/University of Arizona, Active Dunes of Nili Patera (PIA18244)</a></li>
+            <li><a href="https://photojournal.jpl.nasa.gov/catalog/PIA22737" target="_blank" rel="noreferrer">NASA/JPL-Caltech, Mars Climate Sounder 2018 dust storm (PIA22737)</a></li>
+            <li><a href="https://photojournal.jpl.nasa.gov/catalog/PIA24814" target="_blank" rel="noreferrer">NASA/JPL-Caltech/University of Arizona/USGS, Jezero Crater (PIA24814)</a></li>
+            <li><a href="https://pds-atmospheres.nmsu.edu/data_and_services/atmospheres_data/PERSEVERANCE/meda.html" target="_blank" rel="noreferrer">NASA Planetary Data System · MEDA</a></li>
+            <li><a href="https://pds-atmospheres.nmsu.edu/data_and_services/atmospheres_data/MARS/aerosols.html" target="_blank" rel="noreferrer">NASA Planetary Data System · Mars Climate Sounder aerosols</a></li>
+          </ul>
+        </section>
+      </div>
+      <span class="cursor-glow" aria-hidden="true"></span>
+    </dialog>
   </main>
 `;
 
 const dialog = app.querySelector<HTMLDialogElement>(".detail-dialog");
+const researchDialog = app.querySelector<HTMLDialogElement>(".research-dialog");
 const closeButton = app.querySelector<HTMLButtonElement>(".close-button");
+const researchCloseButton = app.querySelector<HTMLButtonElement>(".research-close-button");
+const researchNavButton = app.querySelector<HTMLButtonElement>(".topbar-nav-button");
 const previousSlideButton = app.querySelector<HTMLButtonElement>(".slide-previous");
 const nextSlideButton = app.querySelector<HTMLButtonElement>(".slide-next");
 const previousPlanetButton = app.querySelector<HTMLButtonElement>(".planet-switch-previous");
@@ -165,8 +314,8 @@ const intro = app.querySelector<HTMLElement>(".intro");
 const category = app.querySelector<HTMLElement>("[data-detail-category]");
 const number = app.querySelector<HTMLElement>("[data-detail-number]");
 const title = app.querySelector<HTMLElement>("[data-detail-title]");
-const firstDescription = app.querySelector<HTMLParagraphElement>('[data-detail-description="0"]');
-const secondDescription = app.querySelector<HTMLParagraphElement>('[data-detail-description="1"]');
+const firstDescription = app.querySelector<HTMLDivElement>('[data-detail-description="0"]');
+const secondDescription = app.querySelector<HTMLDivElement>('[data-detail-description="1"]');
 const slideCount = app.querySelector<HTMLElement>(".detail-slide-count");
 const firstSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-background="0"]');
 const secondSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-background="1"]');
@@ -177,6 +326,9 @@ const marsPlanetCard = app.querySelector<HTMLDivElement>('[data-planet-card="mar
 const planetIndicator = app.querySelector<HTMLElement>(".planet-indicator");
 const returnFocusButton = app.querySelector<HTMLButtonElement>(".return-focus-button");
 const cursorGlows = app.querySelectorAll<HTMLElement>(".cursor-glow");
+const loadingScreen = app.querySelector<HTMLDivElement>(".loading-screen");
+const loadingMessage = app.querySelector<HTMLParagraphElement>(".loading-message");
+const loadingRetryButton = app.querySelector<HTMLButtonElement>(".loading-retry");
 let activeMarker: HTMLButtonElement | null = null;
 let activeNote: Note | null = null;
 let activeNotePlanet: PlanetId | null = null;
@@ -199,7 +351,10 @@ let slideTransitionFrame = 0;
 
 if (
   !dialog ||
+  !researchDialog ||
   !closeButton ||
+  !researchCloseButton ||
+  !researchNavButton ||
   !previousSlideButton ||
   !nextSlideButton ||
   !previousPlanetButton ||
@@ -218,7 +373,10 @@ if (
   !earthPlanetCard ||
   !marsPlanetCard ||
   !planetIndicator ||
-  !returnFocusButton
+  !returnFocusButton ||
+  !loadingScreen ||
+  !loadingMessage ||
+  !loadingRetryButton
 ) {
   throw new Error("Detail display elements were not found.");
 }
@@ -227,7 +385,7 @@ const earthGlobe = new Globe(earthGlobeContainer, {
   animateIn: false,
   rendererConfig: { antialias: true, alpha: true },
 })
-  .globeImageUrl(new URL("./img/Earth.jpg", import.meta.url).href)
+  .globeImageUrl(earthTextureUrl)
   .backgroundColor("rgba(0, 0, 0, 0)")
   .showAtmosphere(true)
   .atmosphereColor("#5a9ed6")
@@ -237,11 +395,61 @@ const marsGlobe = new Globe(marsGlobeContainer, {
   animateIn: false,
   rendererConfig: { antialias: true, alpha: true },
 })
-  .globeImageUrl(new URL("./img/Mars.jpg", import.meta.url).href)
+  .globeImageUrl(marsTextureUrl)
   .backgroundColor("rgba(0, 0, 0, 0)")
   .showAtmosphere(true)
   .atmosphereColor("#c46b48")
   .atmosphereAltitude(0.1);
+
+const imageUrls = [
+  planetIconUrl,
+  earthTextureUrl,
+  marsTextureUrl,
+  ...Object.values(notes).flatMap((planetNotes) =>
+    planetNotes.flatMap((note) =>
+      note.slides.flatMap((slide) => (slide.background ? [slide.background] : [])),
+    ),
+  ),
+];
+const imagesReady = Promise.all(
+  [...new Set(imageUrls)].map(
+    (url) =>
+      new Promise<void>((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve();
+        image.onerror = () => reject(new Error(`Failed to load image: ${url}`));
+        image.src = url;
+
+        if (image.complete) {
+          if (image.naturalWidth > 0) {
+            resolve();
+          } else {
+            reject(new Error(`Failed to load image: ${url}`));
+          }
+        }
+      }),
+  ),
+);
+const fontsReady = document.fonts.ready;
+
+const revealPage = () => {
+  loadingScreen.setAttribute("aria-busy", "false");
+  loadingScreen.classList.add("is-hidden");
+  loadingScreen.setAttribute("aria-hidden", "true");
+};
+
+const showLoadingError = (error: unknown) => {
+  console.error("Page startup failed.", error);
+  loadingScreen.setAttribute("aria-busy", "false");
+  loadingScreen.classList.add("is-error");
+  loadingMessage.textContent = "Some assets could not be loaded.";
+  loadingRetryButton.hidden = false;
+};
+
+loadingRetryButton.addEventListener("click", () => window.location.reload());
+void Promise.all([imagesReady, fontsReady])
+  .then(revealPage)
+  .catch(showLoadingError);
 
 const globes = { earth: earthGlobe, mars: marsGlobe };
 const controlsByPlanet = {
@@ -249,7 +457,13 @@ const controlsByPlanet = {
   mars: marsGlobe.controls(),
 };
 const autoRotateSpeed = 0.3;
-const defaultPointOfView = { lat: 10, lng: -25, altitude: 2.05 };
+const marsDefaultPointOfView = notes.mars[0]
+  ? { lat: notes.mars[0].lat, lng: notes.mars[0].lng, altitude: 2.05 }
+  : { lat: 18.4, lng: 77.7, altitude: 2.05 };
+const defaultPointOfViewByPlanet = {
+  earth: { lat: 10, lng: -25, altitude: 2.05 },
+  mars: marsDefaultPointOfView,
+} satisfies Record<PlanetId, { lat: number; lng: number; altitude: number }>;
 
 (["earth", "mars"] as const).forEach((planetId) => {
   const controls = controlsByPlanet[planetId];
@@ -258,7 +472,7 @@ const defaultPointOfView = { lat: 10, lng: -25, altitude: 2.05 };
   controls.enableZoom = false;
   controls.enablePan = false;
   controls.enabled = planetId === activePlanetId;
-  globes[planetId].pointOfView(defaultPointOfView);
+  globes[planetId].pointOfView(defaultPointOfViewByPlanet[planetId]);
 });
 
 const prefersReducedMotion = window.matchMedia(
@@ -333,6 +547,25 @@ const resumeAutoRotate = () => {
   autoRotateRampFrame = requestAnimationFrame(rampSpeed);
 };
 
+const populateDescriptionLayer = (layer: HTMLDivElement, slide: DetailSlide) => {
+  const copy = layer.querySelector<HTMLParagraphElement>("[data-slide-copy]");
+  const metric = layer.querySelector<HTMLParagraphElement>("[data-slide-metric]");
+  const source = layer.querySelector<HTMLParagraphElement>("[data-slide-source]");
+  const action = layer.querySelector<HTMLButtonElement>("[data-slide-action]");
+  if (!copy || !metric || !source || !action) {
+    throw new Error("Description slide content elements were not found.");
+  }
+
+  copy.textContent = slide.description;
+  metric.textContent = slide.metric ?? "";
+  metric.hidden = !slide.metric;
+  source.textContent = slide.source ?? "";
+  source.hidden = !slide.source;
+  action.textContent = slide.actionLabel ?? "";
+  action.hidden = !slide.actionLabel;
+  action.disabled = !slide.actionLabel;
+};
+
 const renderSlide = (note: Note) => {
   const slide = note.slides[activeSlideIndex];
   if (!slide) {
@@ -343,8 +576,13 @@ const renderSlide = (note: Note) => {
   const backgroundLayers = [firstSlideBackground, secondSlideBackground];
   descriptionLayers.forEach((layer) => {
     layer.classList.remove("is-active", "is-incoming", "is-fading-in", "is-fading-out");
-    layer.textContent = "";
     layer.setAttribute("aria-hidden", "true");
+    const action = layer.querySelector<HTMLButtonElement>("[data-slide-action]");
+    if (!action) {
+      throw new Error("Description slide action was not found.");
+    }
+    action.hidden = true;
+    action.disabled = true;
   });
   backgroundLayers.forEach((layer) => {
     layer.classList.remove("is-active", "is-incoming", "is-fading-in");
@@ -358,7 +596,8 @@ const renderSlide = (note: Note) => {
     throw new Error("Active slide layers were not found.");
   }
 
-  activeDescriptionLayer.textContent = slide.description;
+  title.textContent = slide.heading;
+  populateDescriptionLayer(activeDescriptionLayer, slide);
   activeDescriptionLayer.setAttribute("aria-hidden", "false");
   activeDescriptionLayer.classList.add("is-active");
   activeBackgroundLayer.style.backgroundImage = slide.background
@@ -397,15 +636,24 @@ const changeSlide = (direction: -1 | 1) => {
   if (!previousDescription || !nextDescription || !previousBackground || !nextBackground) {
     throw new Error("Slide transition layers were not found.");
   }
+  const previousAction = previousDescription.querySelector<HTMLButtonElement>("[data-slide-action]");
+  const nextAction = nextDescription.querySelector<HTMLButtonElement>("[data-slide-action]");
+  if (!previousAction || !nextAction) {
+    throw new Error("Description slide actions were not found.");
+  }
 
   isChangingSlide = true;
   previousSlideButton.disabled = true;
   nextSlideButton.disabled = true;
 
-  nextDescription.textContent = nextSlide.description;
+  title.textContent = nextSlide.heading;
+  populateDescriptionLayer(nextDescription, nextSlide);
+  nextAction.disabled = true;
   nextDescription.setAttribute("aria-hidden", "false");
   nextDescription.classList.add("is-incoming");
   previousDescription.setAttribute("aria-hidden", "true");
+  previousAction.hidden = true;
+  previousAction.disabled = true;
   nextBackground.style.backgroundImage = nextSlide.background
     ? `url("${nextSlide.background}")`
     : "";
@@ -424,7 +672,6 @@ const changeSlide = (direction: -1 | 1) => {
       slideTransitionTimeout = 0;
       previousDescription.classList.remove("is-active");
       previousDescription.classList.remove("is-fading-out");
-      previousDescription.textContent = "";
       previousBackground.classList.remove("is-active");
       previousBackground.style.backgroundImage = "";
       nextDescription.classList.remove("is-incoming", "is-fading-in");
@@ -433,6 +680,7 @@ const changeSlide = (direction: -1 | 1) => {
       nextBackground.classList.add("is-active");
       activeSlideLayerIndex = nextLayerIndex;
       isChangingSlide = false;
+      nextAction.disabled = !nextSlide.actionLabel;
       previousSlideButton.disabled = false;
       nextSlideButton.disabled = false;
     }, slideTransitionDuration);
@@ -470,7 +718,7 @@ const switchPlanet = () => {
   activePlanetId = nextPlanet;
   updatePlanetPresentation();
   updateReturnFocusButton();
-  globes[nextPlanet].pointOfView(defaultPointOfView, transitionDuration);
+  globes[nextPlanet].pointOfView(defaultPointOfViewByPlanet[nextPlanet], transitionDuration);
 
   window.setTimeout(() => {
     controlsByPlanet[nextPlanet].enabled = true;
@@ -726,7 +974,18 @@ const closeNote = () => {
   window.setTimeout(() => dialog.close(), fadeDuration);
 };
 
+const openResearchPage = () => {
+  if (!researchDialog.open) {
+    researchDialog.showModal();
+  }
+};
+
 closeButton.addEventListener("click", closeNote);
+researchNavButton.addEventListener("click", openResearchPage);
+researchCloseButton.addEventListener("click", () => researchDialog.close());
+app.querySelectorAll<HTMLButtonElement>("[data-slide-action]").forEach((button) => {
+  button.addEventListener("click", openResearchPage);
+});
 previousSlideButton.addEventListener("click", () => changeSlide(-1));
 nextSlideButton.addEventListener("click", () => changeSlide(1));
 dialog.addEventListener("cancel", (event) => {
@@ -764,3 +1023,9 @@ dialog.addEventListener("close", () => {
     updateReturnFocusButton();
   }, transitionDuration);
 });
+
+/* 
+Hung Created this website for NASA Space Apps 2026 as part of a collaborative project,
+#Mypastisnottoday
+#Friendshipismagic
+*/
