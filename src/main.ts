@@ -82,10 +82,18 @@ const notes: Record<PlanetId, Note[]> = {
           background: "/assets/Bodele3.jpg",
         },
         {
+          heading: "Wind-lens behavior and campaign direction",
+          description:
+            "The 2025 wind-lens study identifies a regime split near 8 m/s at the exit region and a strong dust-emission direction cluster near 48°. The broad analysis boxes represent regional flow patterns, not operational test boundaries or flight corridors.",
+          metric: "8 m/s · REGIME SPLIT · 48° DUST-EMISSION CLUSTER",
+          source: "2025 Geophysical Research Letters wind-lens study; broad study boxes only.",
+          background: "/assets/SkyFallSurveyBackground.jpg",
+        },
+        {
           heading: "A test-site candidate, not a surveyed pad",
           description:
-            "The Chicha coordinate is a published field-site point. A stable desert-pavement corridor near the source margin is a candidate staging concept; access, permissions, ground conditions, evacuation routes, and dust hazards still require assessment. Bodélé can support environmental and instrument stress tests, but cannot reproduce Mars gravity or its thin atmosphere.",
-          metric: "REGIONAL DUST EVIDENCE: HIGH · CORRIDOR CANDIDATE: MODERATE",
+            "The Chicha coordinate is a published field-site point. A stable desert-pavement corridor near the eastern/southeastern margin of the exposed diatomite is a candidate staging concept; access, permissions, ground conditions, evacuation routes, and dust hazards still require assessment. Bodélé can support environmental and instrument stress tests, but cannot reproduce Mars gravity or its thin atmosphere.",
+          metric: "REGIONAL DUST EVIDENCE: HIGH · CORRIDOR CANDIDATE: MODERATE · PAD SUITABILITY: NOT ASSESSED",
           source:
             "Site status from the supplied SkyFall research package; NASA Earthdata Worldview, MODIS Terra, 15 Jan 2025.",
           background: "/assets/Bodele4.jpg",
@@ -104,7 +112,7 @@ const notes: Record<PlanetId, Note[]> = {
         {
           heading: "Pressure at the surface",
           description:
-            "A supplied, previously compiled MEDA workbook reports a mean surface pressure of 720.71 Pa across 18,702 hourly records from sols 1–900. This is a provisional summary, not a complete reprocessing of the public archive.",
+            "A supplied, previously compiled MEDA workbook reports a mean surface pressure of 720.71 Pa across 18,728 hourly rows from sols 1–900. This is a provisional summary, not a complete reprocessing of the public archive.",
           metric: "720.71 Pa · MEAN PRESSURE · SOLS 1–900",
           chart: {
             title: "MEDA surface pressure summary",
@@ -139,6 +147,14 @@ const notes: Record<PlanetId, Note[]> = {
           source:
             "User-supplied MEDA extract; image: NASA/JPL-Caltech/University of Arizona (PIA18244).",
           background: "/assets/MarsBG2.jpg",
+        },
+        {
+          heading: "MEDA signals are partial and easy to overread",
+          description:
+            "The supplied MEDA workbook spans 18,728 hourly rows over 836 represented sol-days, but wind values appear in only 4,095 rows (21.9%). Relative humidity is available in 16,008 rows, and the reported wind-direction mean is arithmetic, not circular, so it should not be treated as a valid average direction.",
+          metric: "18,728 HOURLY ROWS · 4,095 WITH WIND · 16,008 WITH HUMIDITY",
+          source: "User-supplied MEDA extract; verify sensor definitions and quality flags before interpreting.",
+          background: "/assets/SkyFallSurveyBackground.jpg",
         },
         {
           heading: "Dust opacity is wavelength-specific",
@@ -188,8 +204,8 @@ if (!app) {
 app.innerHTML = `
   <div class="loading-screen" role="region" aria-label="Loading page" aria-live="polite" aria-busy="true">
     <span class="loading-orbit" aria-hidden="true"><span></span></span>
-    <p class="loading-title">Preparing your experience</p>
-    <p class="loading-message">Loading planets and assets</p>
+    <p class="loading-title">Preparing the SkyFall analogue</p>
+    <p class="loading-message">Loading Earth and Mars research assets</p>
     <button class="loading-retry" type="button" hidden>Reload page</button>
   </div>
   <main class="page-shell">
@@ -198,14 +214,19 @@ app.innerHTML = `
         <img class="wordmark-icon" src="${planetIconUrl}" alt="" aria-hidden="true" />
         NASA SPACEAPPS CHALLENGE
       </a>
-      <button class="topbar-nav-button" type="button" aria-haspopup="dialog">
-        WHY BODÉLÉ?
-      </button>
+      <div class="topbar-actions">
+        <button class="topbar-motion-toggle" type="button" aria-label="Low motion" aria-pressed="false">
+          LOW MOTION <span class="motion-switch" aria-hidden="true"><span></span></span>
+        </button>
+        <button class="topbar-nav-button" type="button" aria-haspopup="dialog">
+          WHY BODÉLÉ?
+        </button>
+      </div>
     </header>
 
     <section class="intro" aria-labelledby="page-title">
       <p class="eyebrow"><span class="eyebrow-line"></span>Analoguing skyfall testing conditions on Earth</p>
-      <h1 id="page-title">Mars <span>at home</span></h1>
+      <h1 id="page-title"><span class="hero-mars">Mars</span> at <span class="hero-earth">home</span></h1>
       <div class="intro-bottom">
         <p>Choose a planet, drag to spin it, or select a point to explore.</p>
         <p class="instruction"><span aria-hidden="true">↘</span> DRAG TO SPIN · SELECT A POINT</p>
@@ -213,6 +234,7 @@ app.innerHTML = `
     </section>
 
     <section class="earth-explorer" aria-label="Explore Earth and Mars">
+      <canvas class="starfield" aria-hidden="true"></canvas>
       <div class="planet-stage" role="group" aria-label="Choose a planet to explore">
         <div class="planet-card planet-card-earth is-focused" data-planet-card="earth">
           <div class="planet-globe earth-globe" role="group" aria-label="Interactive Earth globe"></div>
@@ -236,7 +258,7 @@ app.innerHTML = `
 
     <footer class="footer">
       <span>NASA SPACEAPPS CHALLENGE<span class="footer-dot">©</span> 2026</span>
-      <span>MADE FOR CURIOSITY</span>
+      <span>EARTH TO MARS ANALOGUE</span>
     </footer>
 
     <span class="cursor-glow" aria-hidden="true"></span>
@@ -287,7 +309,7 @@ app.innerHTML = `
           </div>
         </div>
         <div class="detail-bottom">
-          <span>NASA SPACEAPPS CHALLENGE — AN OPEN CANVAS</span>
+          <span>SKYFALL ANALOGUE — EARTH AND MARS RESEARCH</span>
           <span class="detail-slide-count" aria-live="polite"></span>
         </div>
       </article>
@@ -378,6 +400,7 @@ const researchDialog = app.querySelector<HTMLDialogElement>(".research-dialog");
 const closeButton = app.querySelector<HTMLButtonElement>(".close-button");
 const researchCloseButton = app.querySelector<HTMLButtonElement>(".research-close-button");
 const researchNavButton = app.querySelector<HTMLButtonElement>(".topbar-nav-button");
+const motionToggleButton = app.querySelector<HTMLButtonElement>(".topbar-motion-toggle");
 const previousSlideButton = app.querySelector<HTMLButtonElement>(".slide-previous");
 const nextSlideButton = app.querySelector<HTMLButtonElement>(".slide-next");
 const previousPlanetButton = app.querySelector<HTMLButtonElement>(".planet-switch-previous");
@@ -393,6 +416,7 @@ const firstSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-bac
 const secondSlideBackground = app.querySelector<HTMLSpanElement>('[data-slide-background="1"]');
 const earthGlobeContainer = app.querySelector<HTMLDivElement>(".earth-globe");
 const marsGlobeContainer = app.querySelector<HTMLDivElement>(".mars-globe");
+const starfield = app.querySelector<HTMLCanvasElement>(".starfield");
 const earthPlanetCard = app.querySelector<HTMLDivElement>('[data-planet-card="earth"]');
 const marsPlanetCard = app.querySelector<HTMLDivElement>('[data-planet-card="mars"]');
 const planetIndicator = app.querySelector<HTMLElement>(".planet-indicator");
@@ -427,6 +451,7 @@ if (
   !closeButton ||
   !researchCloseButton ||
   !researchNavButton ||
+  !motionToggleButton ||
   !previousSlideButton ||
   !nextSlideButton ||
   !previousPlanetButton ||
@@ -442,6 +467,7 @@ if (
   !secondSlideBackground ||
   !earthGlobeContainer ||
   !marsGlobeContainer ||
+  !starfield ||
   !earthPlanetCard ||
   !marsPlanetCard ||
   !planetIndicator ||
@@ -550,6 +576,10 @@ const defaultPointOfViewByPlanet = {
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
+const starfieldContext = starfield.getContext("2d");
+if (!starfieldContext) {
+  throw new Error("Starfield canvas is unavailable.");
+}
 const transitionDuration = prefersReducedMotion ? 0 : 1000;
 const fadeDuration = prefersReducedMotion ? 0 : 900;
 const researchFadeDuration = prefersReducedMotion ? 0 : 450;
@@ -557,6 +587,147 @@ const slideTransitionDuration = prefersReducedMotion ? 0 : 900;
 let heroIdleTimer = 0;
 let autoRotateRampFrame = 0;
 let researchCloseTimeout = 0;
+let motionBlurBoost = 0;
+let isLowMotionEnabled = false;
+
+const starTileSize = 512;
+const starTile = document.createElement("canvas");
+starTile.width = starTileSize;
+starTile.height = starTileSize;
+const starTileContext = starTile.getContext("2d");
+if (!starTileContext) {
+  throw new Error("Star texture canvas is unavailable.");
+}
+
+const starfieldStars = Array.from({ length: 80 }, () => ({
+  x: Math.random(),
+  y: Math.random(),
+  radius: 0.35 + Math.random() * 1.15,
+  opacity: 0.25 + Math.random() * 0.65,
+  tint: Math.random() > 0.88 ? "#b9d8ff" : "#ffffff",
+}));
+
+starfieldStars.forEach(({ x, y, radius, opacity, tint }) => {
+  const starX = x * starTileSize;
+  const starY = y * starTileSize;
+  const edge = radius * 5;
+  const xOffsets = starX < edge ? [0, starTileSize] : starX > starTileSize - edge ? [-starTileSize, 0] : [0];
+  const yOffsets = starY < edge ? [0, starTileSize] : starY > starTileSize - edge ? [-starTileSize, 0] : [0];
+
+  xOffsets.forEach((offsetX) =>
+    yOffsets.forEach((offsetY) => {
+      starTileContext.beginPath();
+      starTileContext.fillStyle = tint;
+      starTileContext.globalAlpha = opacity;
+      starTileContext.shadowBlur = radius * 4;
+      starTileContext.shadowColor = tint;
+      starTileContext.arc(
+        starX + offsetX,
+        starY + offsetY,
+        radius,
+        0,
+        Math.PI * 2,
+      );
+      starTileContext.fill();
+    }),
+  );
+});
+starTileContext.globalAlpha = 1;
+starTileContext.shadowBlur = 0;
+
+let starfieldWidth = 0;
+let starfieldHeight = 0;
+let starfieldPixelRatio = 1;
+let starOffsetX = 0;
+let starOffsetY = 0;
+
+const drawStarfield = () => {
+  starfieldContext.clearRect(0, 0, starfieldWidth, starfieldHeight);
+  const startX = ((starOffsetX % starTileSize) + starTileSize) % starTileSize;
+  const startY = ((starOffsetY % starTileSize) + starTileSize) % starTileSize;
+
+  for (let x = startX - starTileSize; x < starfieldWidth; x += starTileSize) {
+    for (let y = startY - starTileSize; y < starfieldHeight; y += starTileSize) {
+      starfieldContext.drawImage(starTile, x, y, starTileSize, starTileSize);
+    }
+  }
+};
+
+motionToggleButton.addEventListener("click", () => {
+  isLowMotionEnabled = !isLowMotionEnabled;
+  motionToggleButton.setAttribute("aria-pressed", String(isLowMotionEnabled));
+  starfield.hidden = isLowMotionEnabled;
+  if (!isLowMotionEnabled) {
+    drawStarfield();
+  }
+});
+
+const resizeStarfield = () => {
+  starfieldPixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+  starfieldWidth = window.innerWidth;
+  starfieldHeight = window.innerHeight;
+  starfield.width = Math.ceil(starfieldWidth * starfieldPixelRatio);
+  starfield.height = Math.ceil(starfieldHeight * starfieldPixelRatio);
+  starfieldContext.setTransform(starfieldPixelRatio, 0, 0, starfieldPixelRatio, 0, 0);
+  if (!isLowMotionEnabled) {
+    drawStarfield();
+  }
+};
+
+resizeStarfield();
+window.addEventListener("resize", resizeStarfield);
+
+const triggerMotionBlur = () => {
+  if (!isLowMotionEnabled) {
+    motionBlurBoost = Math.max(motionBlurBoost, prefersReducedMotion ? 0 : 2.2);
+  }
+};
+
+let previousMotionFrame = performance.now();
+let previousAzimuth = controlsByPlanet[activePlanetId].getAzimuthalAngle();
+let previousPolar = controlsByPlanet[activePlanetId].getPolarAngle();
+
+const updateSpaceMotion = (time: number) => {
+  const elapsed = Math.max((time - previousMotionFrame) / 1000, 0.001);
+  const controls = controlsByPlanet[activePlanetId];
+  const azimuth = controls.getAzimuthalAngle();
+  const polar = controls.getPolarAngle();
+  const azimuthDelta = Math.atan2(
+    Math.sin(azimuth - previousAzimuth),
+    Math.cos(azimuth - previousAzimuth),
+  );
+  const polarDelta = polar - previousPolar;
+  const angularSpeed = Math.hypot(azimuthDelta, polarDelta) / elapsed;
+  const spinBlur = prefersReducedMotion
+    ? 0
+    : Math.min(Math.max((angularSpeed - 0.6) * 0.58, 0), 2.6);
+  motionBlurBoost *= Math.exp(-elapsed / 0.42);
+  const blur = isLowMotionEnabled ? 0 : Math.max(spinBlur, motionBlurBoost);
+
+  if (!isLowMotionEnabled) {
+    starOffsetX -= azimuthDelta * (starTileSize / (Math.PI * 2));
+    starOffsetY += polarDelta * (starTileSize / (Math.PI * 2));
+    drawStarfield();
+  }
+  starfield.style.setProperty(
+    "--star-motion-blur",
+    `${isLowMotionEnabled ? 0 : blur * 0.65}px`,
+  );
+  earthGlobeContainer.style.setProperty(
+    "--globe-motion-blur",
+    `${activePlanetId === "earth" ? blur : isLowMotionEnabled ? 0 : motionBlurBoost}px`,
+  );
+  marsGlobeContainer.style.setProperty(
+    "--globe-motion-blur",
+    `${activePlanetId === "mars" ? blur : isLowMotionEnabled ? 0 : motionBlurBoost}px`,
+  );
+
+  previousAzimuth = azimuth;
+  previousPolar = polar;
+  previousMotionFrame = time;
+  requestAnimationFrame(updateSpaceMotion);
+};
+requestAnimationFrame(updateSpaceMotion);
 
 const updateReturnFocusButton = () => {
   const isVisible =
@@ -859,6 +1030,7 @@ const switchPlanet = () => {
   }
 
   isTransitioning = true;
+  triggerMotionBlur();
   stopAutoRotateRamp();
   const previousPlanet = activePlanetId;
   const nextPlanet: PlanetId = previousPlanet === "earth" ? "mars" : "earth";

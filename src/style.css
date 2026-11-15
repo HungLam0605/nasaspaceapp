@@ -17,6 +17,11 @@
 
 * {
   box-sizing: border-box;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 body {
@@ -122,6 +127,15 @@ a {
   font: inherit;
 }
 
+img,
+canvas,
+svg,
+video,
+button,
+a {
+  draggable: false;
+}
+
 button:focus-visible,
 a:focus-visible {
   outline: 2px solid #fff;
@@ -198,8 +212,11 @@ a:focus-visible {
 }
 
 .topbar {
-  position: relative;
-  z-index: 2;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgb(9 9 9 / 84%);
+  backdrop-filter: blur(12px);
 }
 
 .footer {
@@ -248,7 +265,66 @@ a:focus-visible {
   transition: color 180ms ease;
 }
 
-.topbar-nav-button:hover {
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  pointer-events: auto;
+}
+
+.topbar-motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: #b8b8b3;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: color 180ms ease;
+}
+
+.motion-switch {
+  position: relative;
+  width: 26px;
+  height: 14px;
+  border: 1px solid #777773;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 5%);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.motion-switch span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b8b8b3;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.topbar-motion-toggle[aria-pressed="true"] .motion-switch {
+  border-color: #f6f6f4;
+  background: #f6f6f4;
+}
+
+.topbar-motion-toggle[aria-pressed="true"] .motion-switch span {
+  background: #090909;
+  transform: translateX(12px);
+}
+
+.topbar-nav-button:hover,
+.topbar-motion-toggle:hover {
   color: #b8b8b3;
 }
 
@@ -302,8 +378,12 @@ h1 {
   line-height: 0.95;
 }
 
-h1 span {
-  color: #777773;
+h1 .hero-mars {
+  color: #d47755;
+}
+
+h1 .hero-earth {
+  color: #78b9d1;
 }
 
 .intro-bottom {
@@ -340,8 +420,21 @@ h1 span {
   pointer-events: none;
 }
 
+.starfield {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  pointer-events: none;
+  filter: blur(var(--star-motion-blur, 0px));
+  will-change: filter;
+}
+
 .planet-stage {
   position: absolute;
+  z-index: 1;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -404,6 +497,8 @@ h1 span {
 .planet-globe canvas {
   display: block;
   background: transparent;
+  filter: blur(var(--globe-motion-blur, 0px));
+  transition: filter 120ms ease-out;
 }
 
 .earth-marker {
@@ -1133,6 +1228,35 @@ h1 span {
     font-size: 7px;
   }
 
+  .topbar {
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    padding: 8px 0;
+  }
+
+  .wordmark {
+    gap: 7px;
+    font-size: 9px;
+    letter-spacing: 0.09em;
+  }
+
+  .wordmark-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .topbar-actions {
+    gap: 10px;
+  }
+
+  .topbar-nav-button,
+  .topbar-motion-toggle {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 7px;
+    letter-spacing: 0.06em;
+  }
+
   .footer {
     width: min(100% - 40px, 520px);
   }
@@ -1291,6 +1415,11 @@ h1 span {
   .cursor-glow {
     transition: none;
     animation: none;
+  }
+
+  .planet-globe canvas,
+  .starfield {
+    transition: none;
   }
 }
 
