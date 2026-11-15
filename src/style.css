@@ -375,8 +375,13 @@ a:focus-visible {
 }
 
 .intro {
-  position: relative;
+  position: fixed;
   z-index: 2;
+  top: 76px;
+  right: 0;
+  left: 0;
+  width: min(1120px, calc(100% - 80px));
+  margin: 0 auto;
   padding: 82px 0 42px;
   opacity: 1;
   pointer-events: none;
@@ -1355,6 +1360,8 @@ h1 .hero-earth {
   }
 
   .intro {
+    top: 64px;
+    width: min(100% - 40px, 520px);
     padding: 64px 0 32px;
   }
 
